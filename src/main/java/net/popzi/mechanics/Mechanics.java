@@ -27,7 +27,7 @@ public class Mechanics {
      * If so, 0.7% chance to drop a head. Increased to 4% if the sword was enchanted with sweeping edge.
      * @param e PlayerDeathEvent event.
      */
-    public void WasKilledBySword(PlayerDeathEvent e) {
+    public void HandleSwordDeath(PlayerDeathEvent e) {
         Player p = e.getEntity();
         Player k = p.getKiller();
 
@@ -58,7 +58,7 @@ public class Mechanics {
      */
     public void Handle(Event e) {
         if (e instanceof PlayerDeathEvent) {
-            this.WasKilledBySword((PlayerDeathEvent) e);
+            this.HandleSwordDeath((PlayerDeathEvent) e);
         }
     }
 }
