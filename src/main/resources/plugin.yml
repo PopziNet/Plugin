@@ -1,0 +1,7 @@
+name: PopziNet
+version: 1.0.0
+main: net.popzi.plugin.Main
+description: The PopziNet Plugin
+author: PopziNet
+website: https://popzi.net
+api-version: '1.21.4'
