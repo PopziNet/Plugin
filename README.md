@@ -3,19 +3,19 @@ The PopziNet MC plugin, built for Paper.
 
 # Features
 - [ ] Death logger
-  - Able to log and restore the players position, inventory, armor, XP and reason or death.
+  - [ ] Able to log and restore the players position, inventory, armor, XP and reason or death.
 - [ ] Minor mechanic alterations
-  - Any cross/bow containing "torch" in the name will shoot inventory torches onto walls
-  - Killing players and mobs with sharpness 5 enchanted swords provides the chance to drop heads
-  - Zombies have a chance to drop phantom membranes
+  - [ ] Any cross/bow containing "torch" in the name will shoot inventory torches onto walls
+  - [X] Killing other players with sweeping edge enchanted swords provides the chance to drop heads
+  - [ ] Zombies have a chance to drop phantom membranes
 - [ ] Events System
   - Staff are able to
-    - Create customized events
-    - Sequenced custom firework shows
-    - Display GUI and sound elements
-    - Control periodic mob spawns
+    - [ ] Create customized events
+    - [ ] Sequenced custom firework shows
+    - [ ] Display GUI and sound elements
+    - [ ] Control periodic mob spawns
 - [ ] Trolling System
-  - Staff are able to abuse playe-*COUGH* griefers for their own amusement.
+  - [ ] Staff are able to abuse playe-*COUGH* griefers for their own amusement.
 
 # Contribution
 Please fork this repository, make your changes and submit them as a new pull request for review.
