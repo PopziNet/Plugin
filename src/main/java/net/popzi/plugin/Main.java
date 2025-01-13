@@ -1,5 +1,6 @@
 package net.popzi.plugin;
 
+import net.popzi.mechanics.Mechanics;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Level;
@@ -11,7 +12,7 @@ public class Main extends JavaPlugin implements Listener {
     public boolean MODULE_DEATH;
     public boolean MODULE_TROLL;
     public boolean MODULE_EVENTS;
-    public boolean MODULE_MECHANICS;
+    public Mechanics MODULE_MECHANICS;
     public Logger LOGGER;
     public EventDispatcher DISPATCH;
 
@@ -22,6 +23,7 @@ public class Main extends JavaPlugin implements Listener {
         this.LOGGER = Logger.getLogger(this.getName());
         this.CFG = new Config(this);
         this.DISPATCH = new EventDispatcher(this);
+        this.MODULE_MECHANICS = new Mechanics(this);
     }
 
     /***

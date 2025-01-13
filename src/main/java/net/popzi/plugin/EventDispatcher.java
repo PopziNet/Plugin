@@ -3,7 +3,6 @@ package net.popzi.plugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import java.util.logging.Level;
 
 /***
  * Our EventDispatcher class has 1 purpose: Listen for events, and dispatch actions within the plugin.
@@ -34,8 +33,6 @@ public class EventDispatcher implements Listener {
      */
     @EventHandler
     public void OnPlayerDeathEvent(PlayerDeathEvent event) {
-        this.main.LOGGER.log(Level.INFO, "Lol someone died");
+        this.main.MODULE_MECHANICS.Handle(event);
     }
-
-
 }
