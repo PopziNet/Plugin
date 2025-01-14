@@ -2,6 +2,7 @@ package net.popzi.plugin;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 /***
@@ -33,6 +34,15 @@ public class EventDispatcher implements Listener {
      */
     @EventHandler
     public void OnPlayerDeathEvent(PlayerDeathEvent event) {
+        this.main.MODULE_MECHANICS.Handle(event);
+    }
+
+    /**
+     * Entity Death Event Dispatching
+     * @param event the entity death event
+     */
+    @EventHandler
+    public void onEntityDeathEvent(EntityDeathEvent event) {
         this.main.MODULE_MECHANICS.Handle(event);
     }
 }

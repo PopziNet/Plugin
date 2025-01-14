@@ -4,6 +4,7 @@ import net.popzi.plugin.Main;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -58,6 +59,33 @@ public class Mechanics {
         }
     }
 
+    /**
+     * Handles zombie deaths and provides a 5% chance to drop phantom membranes
+     * when they die. This is because we have insomnia / phantoms turned off.
+     * @param e The event type
+     */
+    public void HandleZombieDeath(EntityDeathEvent e) {
+        if (e.getEntity().getType().equals(EntityType.ZOMBIE)) {
+            double number = Math.random();
+            Player killer = e.getEntity().getKiller();
+            ItemStack weapon = null;
+
+            if (killer != null)
+                weapon = killer.getInventory().getItemInMainHand();
+
+            if (0.05 > number) {
+                e.getDrops().add(ItemStack.of(Material.PHANTOM_MEMBRANE, 1));
+
+                if (weapon != null && weapon.getEnchantments().get(Enchantment.LOOTING) != null)
+                    e.getDrops().add(ItemStack.of(Material.PHANTOM_MEMBRANE, weapon.getEnchantmentLevel(Enchantment.LOOTING)));
+            }
+        }
+    }
+
+    /**
+     * Handles shooting of bows to consume torches and place them on the interacted surface.
+     */
+    public void HandleBowShoot() {}
 
     /**
      * The main handler for game mechanics events.
@@ -66,6 +94,10 @@ public class Mechanics {
     public void Handle(Event e) {
         if (e instanceof PlayerDeathEvent) {
             this.HandleSwordDeath((PlayerDeathEvent) e);
+        }
+
+        if (e instanceof EntityDeathEvent) {
+            this.HandleZombieDeath((EntityDeathEvent) e);
         }
     }
 }

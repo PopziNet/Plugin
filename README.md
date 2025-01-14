@@ -7,7 +7,7 @@ The PopziNet MC plugin, built for Paper.
 - [ ] Minor mechanic alterations
   - [ ] Any cross/bow containing "torch" in the name will shoot inventory torches onto walls
   - [X] Killing other players with sweeping edge enchanted swords provides the chance to drop heads
-  - [ ] Zombies have a chance to drop phantom membranes
+  - [X] Zombies have a chance to drop phantom membranes
 - [ ] Events System
   - Staff are able to
     - [ ] Create customized events
