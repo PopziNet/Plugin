@@ -7,7 +7,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 /***
  * Our EventDispatcher class has 1 purpose: Listen for events, and dispatch actions within the plugin.
- * No actionable code should *actually* run here.
+ * No actionable code should *actually* run here. There is probably way better ways of doing this
+ * or not doing this at all and registering events all over the place, but this will do for now.
  * Note that we're not extending the Event class as we're not setting up custom events or registering listeners.
  */
 public class EventDispatcher implements Listener {
@@ -35,6 +36,7 @@ public class EventDispatcher implements Listener {
     @EventHandler
     public void OnPlayerDeathEvent(PlayerDeathEvent event) {
         this.main.MODULE_MECHANICS.Handle(event);
+        this.main.MODULE_DEATH.Handle(event);
     }
 
     /**
