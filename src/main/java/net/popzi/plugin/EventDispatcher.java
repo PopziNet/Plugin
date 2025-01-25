@@ -4,6 +4,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 
 /***
  * Our EventDispatcher class has 1 purpose: Listen for events, and dispatch actions within the plugin.
@@ -49,6 +50,16 @@ public class EventDispatcher implements Listener {
     @EventHandler
     @SuppressWarnings("unused")
     public void onEntityDeathEvent(EntityDeathEvent event) {
+        this.main.MODULE_MANAGER.pushEvent(event);
+    }
+
+    /**
+     * Listens for chunk load events
+     * @param event the chunk load event
+     */
+    @EventHandler
+    @SuppressWarnings("unused")
+    public void onChunkLoadEvent(ChunkLoadEvent event) {
         this.main.MODULE_MANAGER.pushEvent(event);
     }
 }

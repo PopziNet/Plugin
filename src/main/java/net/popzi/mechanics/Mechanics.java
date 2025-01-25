@@ -5,15 +5,19 @@ import net.popzi.plugin.ModuleManager.Module;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import java.util.Objects;
+import java.util.logging.Level;
+
 import static org.bukkit.Tag.ITEMS_SWORDS;
 
 
@@ -42,6 +46,10 @@ public class Mechanics implements Module {
 
         if (event instanceof EntityDeathEvent) {
             this.HandleZombieDeath((EntityDeathEvent) event);
+        }
+
+        if (event instanceof ChunkLoadEvent) {
+            this.handleZombieHorseEntities((ChunkLoadEvent) event);
         }
     }
 
@@ -95,6 +103,29 @@ public class Mechanics implements Module {
 
                 if (weapon != null && weapon.getEnchantments().get(Enchantment.LOOTING) != null)
                     e.getDrops().add(ItemStack.of(Material.PHANTOM_MEMBRANE, weapon.getEnchantmentLevel(Enchantment.LOOTING)));
+            }
+        }
+    }
+
+
+    /**
+     * Handles Zombie Horses. An event caused these to spawn everywhere.
+     * So, delete them unless they're named.
+     * @param event the chunk population event
+     */
+    public void handleZombieHorseEntities(ChunkLoadEvent event) {
+        for (Entity entity : event.getChunk().getEntities()) {
+            if (entity.getType() == EntityType.ZOMBIE_HORSE) {
+                this.main.LOGGER.log(Level.INFO, "found zombie horse: " + entity.getName());
+                if (entity.getName().equalsIgnoreCase("zombie horse")) {
+                    this.main.LOGGER.log(Level.INFO, "removed zombie horse");
+                    this.main.getServer().getScheduler().runTaskLater(this.main, new Runnable() {
+                        @Override
+                        public void run() {
+                            entity.remove();
+                        }
+                    }, 1L);
+                }
             }
         }
     }

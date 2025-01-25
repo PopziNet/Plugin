@@ -110,7 +110,8 @@ public class ModuleManager {
      * @param event to handle
      */
     public void pushEvent(Event event) {
-        this.main.LOGGER.log(Level.INFO, "Queueing event: " + event.getEventName());
+        if (!event.getEventName().equalsIgnoreCase("ChunkLoadEvent"))
+            this.main.LOGGER.log(Level.INFO, "Queueing event: " + event.getEventName());
         this.eventQueue.add(event);
     }
 
@@ -124,7 +125,7 @@ public class ModuleManager {
             while (true) {
                 try {
                     Event event = eventQueue.take(); // Waits for an event
-                    this.main.LOGGER.log(Level.INFO, "Processing event: " + event.getEventName());
+                    //this.main.LOGGER.log(Level.INFO, "Processing event: " + event.getEventName());
                     modules.forEach((module, isActive) -> {
                         if (isActive) {
                             module.handleEvent(event);
