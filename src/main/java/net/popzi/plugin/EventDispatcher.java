@@ -27,24 +27,28 @@ public class EventDispatcher implements Listener {
      */
     public void Register() {
         this.main.getServer().getPluginManager().registerEvents(this, this.main);
+        this.main.MODULE_MANAGER.startEventProcessor();
     }
 
     /**
-     * Player Death Event Dispatching
+     * -------------------------------------------- AVOID USING THIS EVENT --------------------------------------------
+     * This has been explicitly put here so that you don't register it.
+     * Use EntityDeathEvent instead. Paper had the in-genius idea to have two events with the possibility of
+     * returning the same event types, leading to you processing the same event, twice.
      * @param event the player death event
      */
     @EventHandler
-    public void OnPlayerDeathEvent(PlayerDeathEvent event) {
-        this.main.MODULE_MECHANICS.Handle(event);
-        this.main.MODULE_DEATH.Handle(event);
-    }
+    @SuppressWarnings("unused")
+    public void OnPlayerDeathEvent(PlayerDeathEvent event) {}
 
     /**
-     * Entity Death Event Dispatching
+     * Entity Death Event Dispatching.
+     * @implNote the event may also be PlayerDeathEvent.
      * @param event the entity death event
      */
     @EventHandler
+    @SuppressWarnings("unused")
     public void onEntityDeathEvent(EntityDeathEvent event) {
-        this.main.MODULE_MECHANICS.Handle(event);
+        this.main.MODULE_MANAGER.pushEvent(event);
     }
 }

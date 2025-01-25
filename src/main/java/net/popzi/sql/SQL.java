@@ -22,7 +22,7 @@ public class SQL {
         // Read a text file by moving every single byte from the HDD into memory, good lord!
         try (
             InputStream fs = main.getResource("schema.sql");
-            StringWriter writer = new StringWriter();
+            StringWriter writer = new StringWriter()
         ) {
             if (fs != null) {
                 IOUtil.copy(fs, writer, "UTF-8");
@@ -35,7 +35,7 @@ public class SQL {
         // Handle connections and schema check
         try (
             Connection c = DriverManager.getConnection(this.URI);
-            Statement statement = c.createStatement();
+            Statement statement = c.createStatement()
         ) {
             this.connection = c; // Store for later use.
             statement.setQueryTimeout(15);

@@ -46,7 +46,6 @@ public class Config {
     public void SaveDefault(boolean force) {
         if (force)
             this.main.saveResource("config.yml", true);
-
         if (!this.file.exists()) // Save if the file does not exist
             this.main.saveResource("config.yml", false);
     }

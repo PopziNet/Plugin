@@ -1,6 +1,7 @@
 package net.popzi.death;
 
 import net.popzi.plugin.Main;
+import net.popzi.plugin.ModuleManager.Module;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.Inventory;
@@ -12,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Base64;
 
-public class Death {
+public class Death implements Module {
 
     private Main main;
 
@@ -22,6 +23,18 @@ public class Death {
      */
     public Death(Main main) {
         this.main = main;
+    }
+
+    @Override
+    public String getName() {
+        return "MODULE_DEATH";
+    }
+
+    @Override
+    public void handleEvent(Event event) {
+        if (event instanceof PlayerDeathEvent) {
+            this.HandleDeath((PlayerDeathEvent) event);
+        }
     }
 
     /**
@@ -45,19 +58,21 @@ public class Death {
         int Z = event.getEntity().getLocation().getBlockZ();
         String InventoryB64 = this.InventoryToString(event.getEntity().getInventory());
 
-        try ( // Upload into database
-            Connection c = this.main.sql.connect()
-        ) {
-            PreparedStatement statement = c.prepareStatement("INSERT INTO Deaths (UUID, World, X, Y, Z, Inventory) VALUES (?, ?, ?, ?, ?, ?);");
-            statement.setString(1, UUID);
-            statement.setString(2, World);
-            statement.setInt(3, X);
-            statement.setInt(4, Y);
-            statement.setInt(5, Z);
-            statement.setString(6, InventoryB64);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if (!InventoryB64.isEmpty()) {
+            try ( // Upload into database
+                Connection c = this.main.DB.connect()
+            ) {
+                PreparedStatement statement = c.prepareStatement("INSERT INTO Deaths (UUID, World, X, Y, Z, Inventory) VALUES (?, ?, ?, ?, ?, ?);");
+                statement.setString(1, UUID);
+                statement.setString(2, World);
+                statement.setInt(3, X);
+                statement.setInt(4, Y);
+                statement.setInt(5, Z);
+                statement.setString(6, InventoryB64);
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -79,15 +94,5 @@ public class Death {
             }
         }
         return encoder.encodeToString(byteStream.toByteArray());
-    }
-
-    /**
-     * Handler for determining which functions to dispatch the event to
-     * @param e event given by dispatcher
-     */
-    public void Handle(Event e) {
-        if (e instanceof PlayerDeathEvent) {
-            this.HandleDeath((PlayerDeathEvent) e);
-        }
     }
 }

@@ -11,33 +11,33 @@ import java.util.logging.Logger;
 public class Main extends JavaPlugin implements Listener {
 
     public Config CFG;
-    public Death MODULE_DEATH;
-    public boolean MODULE_TROLL;
-    public boolean MODULE_EVENTS;
-    public Mechanics MODULE_MECHANICS;
+    public ModuleManager MODULE_MANAGER;
     public Logger LOGGER;
     public EventDispatcher DISPATCH;
-    public SQL sql;
+    public SQL DB;
 
     /**
-     * Constructor, initial setup
+     * Constructor, initial setup.
+     * Things that don't require bukkit should be put here.
      */
     public Main() {
         this.LOGGER = Logger.getLogger(this.getName());
-        this.CFG = new Config(this);
         this.DISPATCH = new EventDispatcher(this);
-        this.MODULE_MECHANICS = new Mechanics(this);
-        this.MODULE_DEATH = new Death(this);
-        this.sql = new SQL(this);
     }
 
     /***
      * Override the Bukkit onEnable() method, which executes at server boot up.
+     * Things that require bukkit should be put here.
      */
     @Override
     public void onEnable() {
-        this.LOGGER.log(Level.INFO, "PopziNet Loaded");
+        this.CFG = new Config(this);
+        this.DB = new SQL(this);
+        this.MODULE_MANAGER = new ModuleManager(this);
+        this.MODULE_MANAGER.registerModule(new Mechanics(this));
+        this.MODULE_MANAGER.registerModule(new Death(this));
         this.DISPATCH.Register();
+        this.LOGGER.log(Level.INFO, "PopziNet Loaded");
     }
 
     /**
@@ -45,7 +45,7 @@ public class Main extends JavaPlugin implements Listener {
      */
     @Override
     public void onDisable() {
-        this.LOGGER.log(Level.INFO, "PopziNet Unloaded.");
+        this.MODULE_MANAGER.stopEventProcessor();
+        this.LOGGER.log(Level.INFO, "PopziNet Unloaded");
     }
-
 }

@@ -1,6 +1,7 @@
 package net.popzi.mechanics;
 
 import net.popzi.plugin.Main;
+import net.popzi.plugin.ModuleManager.Module;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
@@ -15,7 +16,8 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.Objects;
 import static org.bukkit.Tag.ITEMS_SWORDS;
 
-public class Mechanics {
+
+public class Mechanics implements Module {
 
     private final Main main;
 
@@ -25,6 +27,22 @@ public class Mechanics {
      */
     public Mechanics(Main main) {
         this.main = main;
+    }
+
+    @Override
+    public String getName() {
+        return "MODULE_MECHANICS";
+    }
+
+    @Override
+    public void handleEvent(Event event) {
+        if (event instanceof PlayerDeathEvent) {
+            this.HandleSwordDeath((PlayerDeathEvent) event);
+        }
+
+        if (event instanceof EntityDeathEvent) {
+            this.HandleZombieDeath((EntityDeathEvent) event);
+        }
     }
 
     /**
@@ -41,12 +59,12 @@ public class Mechanics {
 
             if (ITEMS_SWORDS.isTagged(weapon.getType())) {
                 double number = Math.random(); // 0.0 -- to -- 1.0
-                double dropchance = 0.007;
+                double dropChance = 0.007;
 
                 if (weapon.getEnchantments().get(Enchantment.SWEEPING_EDGE) != null)
-                    dropchance = 0.04;
+                    dropChance = 0.04;
 
-                if (dropchance > number) { // A drop is to occur.
+                if (dropChance > number) { // A drop is to occur.
                     ItemStack head = ItemStack.of(Material.PLAYER_HEAD);
                     SkullMeta meta = (SkullMeta) head.getItemMeta();
                     assert meta != null;
@@ -85,18 +103,4 @@ public class Mechanics {
      * Handles shooting of bows to consume torches and place them on the interacted surface.
      */
     public void HandleBowShoot() {}
-
-    /**
-     * The main handler for game mechanics events.
-     * @param e The event that took place.
-     */
-    public void Handle(Event e) {
-        if (e instanceof PlayerDeathEvent) {
-            this.HandleSwordDeath((PlayerDeathEvent) e);
-        }
-
-        if (e instanceof EntityDeathEvent) {
-            this.HandleZombieDeath((EntityDeathEvent) e);
-        }
-    }
 }

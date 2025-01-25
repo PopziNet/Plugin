@@ -1,5 +1,5 @@
 # Plugin
-The PopziNet MC plugin, built for Paper.
+The PopziNet MC plugin, built for Paper with a blazing fast module and event handling system.
 
 # Features
 - [ ] 🚧 Death logger
