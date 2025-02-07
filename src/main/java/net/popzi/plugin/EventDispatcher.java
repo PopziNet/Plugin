@@ -3,7 +3,9 @@ package net.popzi.plugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 
 /***
@@ -62,4 +64,26 @@ public class EventDispatcher implements Listener {
     public void onChunkLoadEvent(ChunkLoadEvent event) {
         this.main.MODULE_MANAGER.pushEvent(event);
     }
+
+    /**
+     * Listens for bow shoot events (I.e. skeletons, players)
+     * @param event the bow shooting event
+     */
+    @EventHandler
+    @SuppressWarnings("unused")
+    public void onEntityShootEvent(EntityShootBowEvent event) {
+        this.main.MODULE_MANAGER.pushEvent(event);
+    }
+
+    /**
+     * Listens for projectiles hitting things (I.e. blocks, or other players or entities)
+     * @param event the projectile hitting event
+     */
+    @EventHandler
+    @SuppressWarnings("unused")
+    public void onProjectileHitEvent(ProjectileHitEvent event) {
+        this.main.MODULE_MANAGER.pushEvent(event);
+    }
+
+
 }

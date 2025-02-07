@@ -15,7 +15,7 @@
 ############################################################
 
 # A string prefixed to all messages originating from this plugin. Can be empty.
-CHAT_PREFIX: '[PN] '
+CHAT_PREFIX: '[PN] ' # TODO
 
 # Determines if the death logging module should be active.
 MODULE_DEATH: true
@@ -24,10 +24,10 @@ MODULE_DEATH: true
 MODULE_MECHANICS: true
 
 # Determines if the events system should be active.
-MODULE_EVENTS: true
+MODULE_EVENTS: true # TODO
 
 # Determines if the trolling system should be active.
-MODULE_TROLL: true
+MODULE_TROLL: true # TODO
 
 
 ############################################################
@@ -47,8 +47,36 @@ MODULE_TROLL: true
 # +------------------------------------------------------+ #
 ############################################################
 
-# Options for this module go here
+# Determines if zombies drop membranes
+ZOMBIE_DROP_MEMBRANES: true # TODO
+ZOMBIE_DROP_MEMBRANES_CHANCE: 20 # TODO
 
+# Determines if the rain overhaul system should be active
+RAIN_OVERHAUL: true # TODO
+
+# If rain does occur, how long should it last for,
+# with a minute randomness in duration between 0 and the specified value
+RAIN_DURATION_MINUTES: 30 # TODO
+RAIN_DURATION_RANDOMNESS: 15 # TODO
+
+# Sets the chance of rain or thunder when rain occurs.
+# Set to 0 to disable this for vanilla thunder.
+RAIN_CHANCE_THUNDER: 10 # TODO
+
+# How long after it has rained should the system wait before allowing more rain
+RAIN_LOCKOUT_MINUTES: 120 # TODO
+
+# Determines if player heads should drop
+PLAYER_HEADS: true # TODO
+PLAYER_HEADS_DROP_CHANCE: 0.4 # TODO
+
+# Determines if swords enchanted with sweeping edge should increase
+# the drop chances, and what the new chance should be.
+PLAYER_HEADS_SWEEP_ENABLE_CHANCE: true # TODO
+PLAYER_HEADS_SWEEP_DROP_CHANCE: 4 # TODO
+
+# Determines if torch bows should be enabled
+TORCH_BOWS: true # TODO
 
 ############################################################
 # +------------------------------------------------------+ #

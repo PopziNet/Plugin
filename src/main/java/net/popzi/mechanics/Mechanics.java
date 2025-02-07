@@ -2,8 +2,15 @@ package net.popzi.mechanics;
 
 import net.popzi.plugin.Main;
 import net.popzi.plugin.ModuleManager.Module;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockType;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.type.RedstoneWallTorch;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -11,11 +18,18 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.util.Vector;
+
+import java.util.EnumSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
 
 import static org.bukkit.Tag.ITEMS_SWORDS;
@@ -40,16 +54,22 @@ public class Mechanics implements Module {
 
     @Override
     public void handleEvent(Event event) {
+        // TODO: Switch may be better here
         if (event instanceof PlayerDeathEvent) {
             this.HandleSwordDeath((PlayerDeathEvent) event);
         }
-
         if (event instanceof EntityDeathEvent) {
             this.HandleZombieDeath((EntityDeathEvent) event);
         }
-
         if (event instanceof ChunkLoadEvent) {
-            this.handleZombieHorseEntities((ChunkLoadEvent) event);
+            this.HandleZombieHorseEntities((ChunkLoadEvent) event);
+        }
+        if (event instanceof EntityShootBowEvent) {
+            this.HandleBowShoot((EntityShootBowEvent) event);
+        }
+        if (event instanceof ProjectileHitEvent) {
+            this.HandleBowShootHit((ProjectileHitEvent) event);
+            this.HandleWindCharge((ProjectileHitEvent) event);
         }
     }
 
@@ -113,12 +133,10 @@ public class Mechanics implements Module {
      * So, delete them unless they're named.
      * @param event the chunk population event
      */
-    public void handleZombieHorseEntities(ChunkLoadEvent event) {
+    public void HandleZombieHorseEntities(ChunkLoadEvent event) {
         for (Entity entity : event.getChunk().getEntities()) {
             if (entity.getType() == EntityType.ZOMBIE_HORSE) {
-                this.main.LOGGER.log(Level.INFO, "found zombie horse: " + entity.getName());
                 if (entity.getName().equalsIgnoreCase("zombie horse")) {
-                    this.main.LOGGER.log(Level.INFO, "removed zombie horse");
                     this.main.getServer().getScheduler().runTaskLater(this.main, new Runnable() {
                         @Override
                         public void run() {
@@ -133,5 +151,104 @@ public class Mechanics implements Module {
     /**
      * Handles shooting of bows to consume torches and place them on the interacted surface.
      */
-    public void HandleBowShoot() {}
+    public void HandleBowShoot(EntityShootBowEvent event) {
+        if (event.getEntity().getType() != EntityType.PLAYER)
+            return;
+
+        Player player = (Player) event.getEntity();
+        Inventory inventory = player.getInventory();
+        ItemStack bow = event.getBow();
+
+        if (bow == null || !bow.displayName().toString().toLowerCase().contains("torch"))
+            return;
+
+        if (inventory.contains(Material.TORCH) ||
+            inventory.contains(Material.SOUL_TORCH) ||
+            inventory.contains(Material.REDSTONE_TORCH)) {
+
+            // Here we can control the order of preference as to which torch type to use.
+            // .first() returns -1 if the item cannot be found.
+            int torch_index = inventory.first(Material.TORCH);
+            if (torch_index == -1)
+                torch_index = inventory.first(Material.SOUL_TORCH);
+            if (torch_index == -1)
+                torch_index = inventory.first(Material.REDSTONE_TORCH);
+
+            // Remove the torch from the inventory
+            ItemStack torch = inventory.getItem(torch_index);
+            if (torch == null)
+                return;
+            torch.setAmount(torch.getAmount() - 1);
+            inventory.setItem(torch_index, torch);
+
+            // Begin the event. Set the projectile on fire and tag is, so we know how to process it when
+            // It hits a block on the block hitting event
+            event.getProjectile().setVisualFire(true);
+            event.getProjectile().addScoreboardTag(torch.getType().toString());
+        }
+    }
+
+    /**
+     * Handles what happens when a projectile hits something.
+     * @param event of the projectile hitting something
+     */
+    public void HandleBowShootHit(ProjectileHitEvent event) {
+        if (event.getHitBlock() == null)
+            return;
+
+        // Handle the projectile
+        Entity projectile = event.getEntity();
+        Material torch_type = null;
+        if (projectile.getScoreboardTags().contains("TORCH"))
+            torch_type = Material.TORCH;
+        else if (projectile.getScoreboardTags().contains("REDSTONE_TORCH"))
+            torch_type = Material.REDSTONE_TORCH;
+        else if (projectile.getScoreboardTags().contains("SOUL_TORCH"))
+            torch_type = Material.SOUL_TORCH;
+
+        // Handle the block
+        Block block = event.getHitBlock();
+        Set<Material> validBlocks = EnumSet.of(
+            Material.GRASS_BLOCK,
+            Material.STONE,
+            Material.DEEPSLATE,
+            Material.DIRT,
+            Material.SAND
+        );
+
+        if (!validBlocks.contains(block.getType()))
+            return;
+        if (event.getHitBlockFace() == null)
+            return;
+
+        // Place the torch on the block face
+
+        // Find the block we need to alter
+        BlockFace face = event.getHitBlockFace();
+        Location mod = new Location(block.getWorld(), face.getModX(), face.getModY(), face.getModZ());
+        Location alteration = block.getLocation().add(mod); // The block to change
+
+        // Check that the alteration block is able to support a torch
+        Block alterationBlock = projectile.getWorld().getBlockAt(alteration);
+        this.main.LOGGER.log(Level.INFO, "Hit: " + block.getLocation() + " projectile hit: " + alteration);
+
+        // TODO: Figure out how the hell paper now handles block directions and torches >_>
+    }
+
+
+    /**
+     * Hey look at you, you found your first secret :-)
+     * @param event The wind charge event
+     */
+    public void HandleWindCharge(ProjectileHitEvent event) {
+        if (event.getEntity().getShooter() instanceof Player p) {
+
+            Entity e = event.getHitEntity();
+            if (e == null)
+                return;
+
+            if (p.getInventory().getItemInMainHand().displayName().toString().toLowerCase().contains("super"))
+                e.setVelocity(e.getVelocity().multiply(100));
+        }
+    }
 }
