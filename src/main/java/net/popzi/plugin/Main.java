@@ -15,6 +15,7 @@ public class Main extends JavaPlugin implements Listener {
     public Logger LOGGER;
     public EventDispatcher DISPATCH;
     public SQL DB;
+    public CommandManager COMMAND_MANAGER;
 
     /**
      * Constructor, initial setup.
@@ -38,6 +39,7 @@ public class Main extends JavaPlugin implements Listener {
         this.MODULE_MANAGER.registerModule(new Death(this));
         this.DISPATCH.Register();
         this.LOGGER.log(Level.INFO, "PopziNet Loaded");
+        this.COMMAND_MANAGER = new CommandManager(this);
     }
 
     /**

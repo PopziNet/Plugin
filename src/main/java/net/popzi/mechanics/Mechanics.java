@@ -12,15 +12,9 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.RedstoneWallTorch;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -70,6 +64,9 @@ public class Mechanics implements Module {
         if (event instanceof ProjectileHitEvent) {
             this.HandleBowShootHit((ProjectileHitEvent) event);
             this.HandleWindCharge((ProjectileHitEvent) event);
+        }
+        if (event instanceof EntityPickupItemEvent) {
+            this.HandleEntityPickup((EntityPickupItemEvent) event);
         }
     }
 
@@ -250,5 +247,30 @@ public class Mechanics implements Module {
             if (p.getInventory().getItemInMainHand().displayName().toString().toLowerCase().contains("super"))
                 e.setVelocity(e.getVelocity().multiply(100));
         }
+    }
+
+    /**
+     * Hey look at you, you found your second secret!
+     * @param event The entity pickup event
+     */
+    public void HandleEntityPickup(EntityPickupItemEvent event) {
+        if (!(event.getEntity() instanceof Zombie))
+            return;
+
+        if (event.getItem().getItemStack().getType() != Material.GOLDEN_APPLE)
+            return;
+
+        Location l = event.getEntity().getLocation();
+        this.main.LOGGER.log(Level.INFO, "Entity picked up: " + l.getBlockX() + ", " + l.getBlockY() + ", " + l.getBlockZ() + ", Type: " + event.getEntity().getType());
+
+        // Spawn a giant zombie
+        this.main.getServer().getScheduler().runTaskLater(this.main, new Runnable() {
+            @Override
+            public void run() {
+                event.getItem().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.GIANT);
+                event.getEntity().remove();
+            }
+        }, 1L);
+
     }
 }

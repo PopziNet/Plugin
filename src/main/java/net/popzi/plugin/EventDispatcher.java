@@ -2,10 +2,7 @@ package net.popzi.plugin;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.world.ChunkLoadEvent;
 
 /***
@@ -82,6 +79,16 @@ public class EventDispatcher implements Listener {
     @EventHandler
     @SuppressWarnings("unused")
     public void onProjectileHitEvent(ProjectileHitEvent event) {
+        this.main.MODULE_MANAGER.pushEvent(event);
+    }
+
+    /**
+     * Listens for entities picking up items
+     * @param event the entity picking up the item
+     */
+    @EventHandler
+    @SuppressWarnings("Unused")
+    public void onItemPickup(EntityPickupItemEvent event) {
         this.main.MODULE_MANAGER.pushEvent(event);
     }
 

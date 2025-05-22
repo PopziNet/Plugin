@@ -5,3 +5,7 @@ description: The PopziNet Plugin
 author: PopziNet
 website: https://popzi.net
 api-version: '1.21.4'
+commands:
+  pn:
+    description: /pn staff command
+    usage: /pn
