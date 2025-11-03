@@ -1,16 +1,14 @@
 package net.popzi.mechanics;
 
+import net.kyori.adventure.util.TriState;
 import net.popzi.plugin.Main;
 import net.popzi.plugin.ModuleManager.Module;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockType;
+import org.bukkit.block.BlockSupport;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.type.RedstoneWallTorch;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
@@ -19,11 +17,8 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.util.Vector;
 
-import java.util.EnumSet;
 import java.util.Objects;
-import java.util.Set;
 import java.util.logging.Level;
 
 import static org.bukkit.Tag.ITEMS_SWORDS;
@@ -180,7 +175,7 @@ public class Mechanics implements Module {
 
             // Begin the event. Set the projectile on fire and tag is, so we know how to process it when
             // It hits a block on the block hitting event
-            event.getProjectile().setVisualFire(true);
+            event.getProjectile().setVisualFire(TriState.TRUE);
             event.getProjectile().addScoreboardTag(torch.getType().toString());
         }
     }
@@ -190,46 +185,92 @@ public class Mechanics implements Module {
      * @param event of the projectile hitting something
      */
     public void HandleBowShootHit(ProjectileHitEvent event) {
-        if (event.getHitBlock() == null)
-            return;
-
         // Handle the projectile
         Entity projectile = event.getEntity();
-        Material torch_type = null;
+        Material torch_type;
         if (projectile.getScoreboardTags().contains("TORCH"))
             torch_type = Material.TORCH;
         else if (projectile.getScoreboardTags().contains("REDSTONE_TORCH"))
             torch_type = Material.REDSTONE_TORCH;
         else if (projectile.getScoreboardTags().contains("SOUL_TORCH"))
             torch_type = Material.SOUL_TORCH;
+        else {
+            torch_type = null;
+        }
+
+        if (torch_type == null)
+            return;
+
+        // If we've hit an entity, set it on fire
+        if (event.getHitEntity() != null) {
+            Entity e = event.getHitEntity();
+            if (event.getEntity().getVisualFire() == TriState.TRUE)
+                e.setFireTicks(60);
+        }
 
         // Handle the block
         Block block = event.getHitBlock();
-        Set<Material> validBlocks = EnumSet.of(
-            Material.GRASS_BLOCK,
-            Material.STONE,
-            Material.DEEPSLATE,
-            Material.DIRT,
-            Material.SAND
-        );
-
-        if (!validBlocks.contains(block.getType()))
-            return;
-        if (event.getHitBlockFace() == null)
-            return;
-
-        // Place the torch on the block face
-
-        // Find the block we need to alter
         BlockFace face = event.getHitBlockFace();
-        Location mod = new Location(block.getWorld(), face.getModX(), face.getModY(), face.getModZ());
-        Location alteration = block.getLocation().add(mod); // The block to change
+        if (block == null | face == null)
+            return;
 
-        // Check that the alteration block is able to support a torch
-        Block alterationBlock = projectile.getWorld().getBlockAt(alteration);
-        this.main.LOGGER.log(Level.INFO, "Hit: " + block.getLocation() + " projectile hit: " + alteration);
+        // Get the block we need to think about altering
+        Block alterationBlock = block.getRelative(face);
 
-        // TODO: Figure out how the hell paper now handles block directions and torches >_>
+        // Ensure the target block can handle a torch, and is replaceable (air, water, etc.)
+        if (!canSupportTorch(block, face)) {
+            // Drop a torch item at the hit block location
+            Bukkit.getScheduler().runTask(this.main, () -> {
+                alterationBlock.getWorld().dropItemNaturally(alterationBlock.getLocation(), new ItemStack(torch_type, 1));
+            });
+            return;
+        }
+        if (!alterationBlock.isEmpty() && !alterationBlock.isLiquid())
+            return;
+
+        // Now handle direction: floor vs. wall torches
+        Material placeType = torch_type;
+
+        // Wall torches are different block types
+        if (face != BlockFace.UP && face != BlockFace.DOWN) {
+            switch (torch_type) {
+                case TORCH:
+                    placeType = Material.WALL_TORCH;
+                    break;
+                case REDSTONE_TORCH:
+                    placeType = Material.REDSTONE_WALL_TORCH;
+                    break;
+                case SOUL_TORCH:
+                    placeType = Material.SOUL_WALL_TORCH;
+                    break;
+            }
+        } else if (face == BlockFace.DOWN) {
+            return; // Can't place torches upside down
+        }
+
+        // Set the block
+        Material finalPlaceType = placeType;
+        Bukkit.getScheduler().runTask(this.main, () -> {
+            alterationBlock.setType(finalPlaceType, false);
+            BlockData data = alterationBlock.getBlockData();
+            if (data instanceof Directional directional) {
+                // Wall torches face opposite of the hit face
+                directional.setFacing(face);
+                alterationBlock.setBlockData(directional);
+            }
+            projectile.remove();
+            this.main.LOGGER.log(Level.INFO, "Placed torch type: " + finalPlaceType + " facing " + face);
+        });
+    }
+
+    /**
+     * Checks if a block face can support a torch.
+     * Torches can only be placed on solid, full faces (no glass, leaves, etc.).
+     */
+    private boolean canSupportTorch(Block baseBlock, BlockFace face) {
+
+        // Torches require a sturdy face (Minecraft logic)
+        return baseBlock.getBlockData().isFaceSturdy(face, BlockSupport.FULL);
     }
 
 
@@ -245,7 +286,7 @@ public class Mechanics implements Module {
                 return;
 
             if (p.getInventory().getItemInMainHand().displayName().toString().toLowerCase().contains("super"))
-                e.setVelocity(e.getVelocity().multiply(100));
+                e.setVelocity(e.getVelocity().multiply(10));
         }
     }
 
