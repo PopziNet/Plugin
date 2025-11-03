@@ -110,8 +110,8 @@ public class ModuleManager {
      * @param event to handle
      */
     public void pushEvent(Event event) {
-        if (!event.getEventName().equalsIgnoreCase("ChunkLoadEvent"))
-            this.main.LOGGER.log(Level.INFO, "Queueing event: " + event.getEventName());
+        // if (!event.getEventName().equalsIgnoreCase("ChunkLoadEvent"))
+        //    this.main.LOGGER.log(Level.INFO, "Queueing event: " + event.getEventName());
         this.eventQueue.add(event);
     }
 
