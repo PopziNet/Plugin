@@ -1,6 +1,7 @@
 package net.popzi.plugin;
 
 import net.popzi.death.Death;
+import net.popzi.events.Events;
 import net.popzi.mechanics.Mechanics;
 import net.popzi.sql.SQL;
 import org.bukkit.event.Listener;
@@ -37,6 +38,7 @@ public class Main extends JavaPlugin implements Listener {
         this.MODULE_MANAGER = new ModuleManager(this);
         this.MODULE_MANAGER.registerModule(new Mechanics(this));
         this.MODULE_MANAGER.registerModule(new Death(this));
+        this.MODULE_MANAGER.registerModule(new Events(this));
         this.DISPATCH.Register();
         this.LOGGER.log(Level.INFO, "PopziNet Loaded");
         this.COMMAND_MANAGER = new CommandManager(this);

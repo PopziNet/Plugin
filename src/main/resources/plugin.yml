@@ -1,11 +1,15 @@
 name: PopziNet
-version: 1.0.0
+version: 1.0.1
 main: net.popzi.plugin.Main
 description: The PopziNet Plugin
 author: PopziNet
 website: https://popzi.net
-api-version: '1.21.4'
+api-version: '1.21.10'
 commands:
   pn:
     description: /pn staff command
     usage: /pn
+  servertour:
+    description: Take a tour of the servers best builds!
+    usage: /servertour
+    aliases: /tour

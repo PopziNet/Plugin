@@ -29,6 +29,9 @@ MODULE_EVENTS: true # TODO
 # Determines if the trolling system should be active.
 MODULE_TROLL: true # TODO
 
+# Determines if the tours module should be active.
+MODULE_TOURS: true # TODO
+
 
 ############################################################
 # +------------------------------------------------------+ #
@@ -66,9 +69,10 @@ RAIN_CHANCE_THUNDER: 10 # TODO
 # How long after it has rained should the system wait before allowing more rain
 RAIN_LOCKOUT_MINUTES: 120 # TODO
 
-# Determines if player heads should drop
+# Determines if player heads should drop when killed with a sword
 PLAYER_HEADS: true # TODO
-PLAYER_HEADS_DROP_CHANCE: 0.4 # TODO
+PLAYER_HEADS_DROP_CHANCE: 0.04 # TODO
+PLAYER_HEADS_DROP_CHANCE_ENCHANTED: 0.07 # TODO
 
 # Determines if swords enchanted with sweeping edge should increase
 # the drop chances, and what the new chance should be.
@@ -97,3 +101,11 @@ TORCH_BOWS: true # TODO
 
 # Options for this module go here
 
+############################################################
+# +------------------------------------------------------+ #
+# |                        Module                        | #
+# |                        Tours                         | #
+# +------------------------------------------------------+ #
+############################################################
+
+# Options for this module go here
