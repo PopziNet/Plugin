@@ -31,6 +31,9 @@ public class Torchbow {
      * Handles shooting of bows to consume torches and place them on the interacted surface.
      */
     public void HandleBowShoot(EntityShootBowEvent event) {
+        if (!this.main.CFG.getData().getBoolean("TORCH_BOW_ENABLE"))
+            return;
+
         if (event.getEntity().getType() != EntityType.PLAYER)
             return;
 
@@ -77,6 +80,9 @@ public class Torchbow {
      * @param event of the projectile hitting something
      */
     public void HandleBowShootHit(ProjectileHitEvent event) {
+        if (!this.main.CFG.getData().getBoolean("TORCH_BOW_ENABLE"))
+            return;
+
         // Handle the projectile
         Entity projectile = event.getEntity();
         Material torch_type;

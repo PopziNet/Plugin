@@ -7,6 +7,7 @@ import net.popzi.core.CommandManager;
 import net.popzi.core.Config;
 import net.popzi.core.EventDispatcher;
 import net.popzi.core.ModuleManager;
+import net.popzi.modules.tips.Tips;
 import net.popzi.modules.tours.Tours;
 import net.popzi.sql.SQL;
 import org.bukkit.event.Listener;
@@ -46,6 +47,7 @@ public class Main extends JavaPlugin implements Listener {
         this.MODULE_MANAGER.registerModule(new Death(this));
         this.MODULE_MANAGER.registerModule(new Events(this));
         this.MODULE_MANAGER.registerModule(new Tours(this));
+        this.MODULE_MANAGER.registerModule(new Tips(this));
         this.DISPATCH.Register();
         this.LOGGER.log(Level.INFO, "PopziNet Loaded");
     }

@@ -24,13 +24,16 @@ MODULE_DEATH: true
 MODULE_MECHANICS: true
 
 # Determines if the events system should be active.
-MODULE_EVENTS: true # TODO
+MODULE_EVENTS: true
 
 # Determines if the trolling system should be active.
 MODULE_TROLL: true # TODO
 
 # Determines if the tours module should be active.
-MODULE_TOURS: true # TODO
+MODULE_TOURS: true
+
+# Determines if the tips module should be active.
+MODULE_TIPS: true
 
 
 ############################################################
@@ -51,8 +54,8 @@ MODULE_TOURS: true # TODO
 ############################################################
 
 # Determines if zombies drop membranes
-ZOMBIE_DROP_MEMBRANES: true # TODO
-ZOMBIE_DROP_MEMBRANES_CHANCE: 20 # TODO
+ZOMBIE_DROP_MEMBRANES: true
+ZOMBIE_DROP_MEMBRANES_CHANCE: 0.05
 
 # Determines if the rain overhaul system should be active
 RAIN_OVERHAUL: true # TODO
@@ -70,17 +73,17 @@ RAIN_CHANCE_THUNDER: 10 # TODO
 RAIN_LOCKOUT_MINUTES: 120 # TODO
 
 # Determines if player heads should drop when killed with a sword
-PLAYER_HEADS: true # TODO
+PLAYER_HEADS_ENABLE: true # TODO
 PLAYER_HEADS_DROP_CHANCE: 0.04 # TODO
-PLAYER_HEADS_DROP_CHANCE_ENCHANTED: 0.07 # TODO
 
 # Determines if swords enchanted with sweeping edge should increase
 # the drop chances, and what the new chance should be.
-PLAYER_HEADS_SWEEP_ENABLE_CHANCE: true # TODO
-PLAYER_HEADS_SWEEP_DROP_CHANCE: 4 # TODO
+PLAYER_HEADS_SWEEP_ENABLE: true # TODO
+PLAYER_HEADS_SWEEP_DROP_CHANCE: 0.07 # TODO
 
-# Determines if torch bows should be enabled
-TORCH_BOWS: true # TODO
+# Determines if torch bows should be enabled, allowing players to shoot torches onto walls
+# if their cross/bow contains "Torch" in the name
+TORCH_BOW_ENABLE: true
 
 ############################################################
 # +------------------------------------------------------+ #
@@ -109,3 +112,21 @@ TORCH_BOWS: true # TODO
 ############################################################
 
 # Options for this module go here
+
+############################################################
+# +------------------------------------------------------+ #
+# |                        Module                        | #
+# |                         Tips                         | #
+# +------------------------------------------------------+ #
+############################################################
+
+TIPS: [
+  "If 'torch' is in the name of a bow, it will shoot torches onto walls",
+  "Phantoms only spawn on Fridays",
+  "You can /tour the best builds on the server, let us know if your build should be added!",
+  "Player heads have a 0.4% chance of dropping when killed with a sword. 7% if the sword has a sweeping edge!",
+  "Players may drop other body parts in addition to heads when killed",
+  "There are a variety of secret gimmicks hidden in our plugins source code.",
+  "The server restarts every Thursday and Monday at midnight",
+  "We have an online map in /motd which you can view in 3D",
+]
