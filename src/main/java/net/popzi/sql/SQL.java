@@ -1,6 +1,6 @@
 package net.popzi.sql;
 
-import net.popzi.plugin.Main;
+import net.popzi.Main;
 import org.codehaus.plexus.util.IOUtil;
 
 import java.io.File;
