@@ -1,23 +1,15 @@
-package net.popzi.mechanics;
+package net.popzi.modules.mechanics;
 
-import net.kyori.adventure.util.TriState;
-import net.popzi.plugin.Main;
-import net.popzi.plugin.ModuleManager.Module;
+import net.popzi.Main;
+import net.popzi.modules.BaseModule;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockSupport;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Directional;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.Torch;
 
 import java.util.Objects;
 import java.util.logging.Level;
@@ -25,9 +17,8 @@ import java.util.logging.Level;
 import static org.bukkit.Tag.ITEMS_SWORDS;
 
 
-public class Mechanics implements Module {
+public class Mechanics extends BaseModule {
 
-    private final Main main;
     private final Torchbow torchbow;
 
     /**
@@ -35,7 +26,7 @@ public class Mechanics implements Module {
      * @param main instance of the plugin
      */
     public Mechanics(Main main) {
-        this.main = main;
+        super(main);
         this.torchbow = new Torchbow(main);
     }
 
@@ -105,6 +96,11 @@ public class Mechanics implements Module {
      * @param e The event type
      */
     public void HandleZombieDeath(EntityDeathEvent e) {
+        if (!main.CFG.getData().getBoolean("ZOMBIE_DROP_MEMBRANES"))
+            return;
+
+        int dropChance = main.CFG.getData().getInt("ZOMBIE_DROP_MEMBRANES_CHANCE");
+
         if (e.getEntity().getType().equals(EntityType.ZOMBIE)) {
             double number = Math.random();
             Player killer = e.getEntity().getKiller();
@@ -113,7 +109,7 @@ public class Mechanics implements Module {
             if (killer != null)
                 weapon = killer.getInventory().getItemInMainHand();
 
-            if (0.05 > number) {
+            if (dropChance > number) {
                 e.getDrops().add(ItemStack.of(Material.PHANTOM_MEMBRANE, 1));
 
                 if (weapon != null && weapon.getEnchantments().get(Enchantment.LOOTING) != null)

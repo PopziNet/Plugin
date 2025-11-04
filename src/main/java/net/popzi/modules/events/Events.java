@@ -1,20 +1,18 @@
-package net.popzi.events;
-import net.popzi.plugin.Main;
-import net.popzi.plugin.ModuleManager.Module;
+package net.popzi.modules.events;
+import net.popzi.Main;
+import net.popzi.modules.BaseModule;
 import org.bukkit.event.Event;
 
 
 
-public class Events implements Module {
-
-    private final Main main;
+public class Events extends BaseModule {
 
     /**
      * Constructor
      * @param main instance of the plugin
      */
     public Events(Main main) {
-        this.main = main;
+        super(main);
     }
 
     @Override

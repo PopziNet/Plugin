@@ -1,5 +1,7 @@
-package net.popzi.plugin;
+package net.popzi.core;
 
+import net.popzi.Main;
+import net.popzi.interfaces.Module;
 import org.bukkit.event.Event;
 
 import java.util.Map;
@@ -16,19 +18,10 @@ import java.util.logging.Level;
  */
 public class ModuleManager {
 
-    private final Map<Module, Boolean> modules;
+    private final Map<Module, Boolean> modules = new ConcurrentHashMap<>();
     private final Main main;
     private final BlockingQueue<Event> eventQueue = new LinkedBlockingQueue<>();
     private Thread eventThread;
-
-    /**
-     * The interface/type for what a module is
-     * and the methods it should contain
-     */
-    public interface Module {
-        String getName();
-        void handleEvent(Event event);
-    }
 
     /**
      * Constructor for the module manager. Note that the queue thread is started when we
@@ -36,15 +29,32 @@ public class ModuleManager {
      * @param main Main plugin instance
      */
     public ModuleManager(Main main) {
-        this.modules = new ConcurrentHashMap<>();
         this.main = main;
+    }
+
+    /**
+     * Returns a module based on a string name
+     * @param name of the module as a string
+     * @return module of the requested name
+     */
+    public Module getModule(String name) {
+        if (name == null || name.isEmpty())
+            throw new IllegalArgumentException("Module name cannot be null or empty");
+
+        for (net.popzi.interfaces.Module module : modules.keySet()) {
+            if (module.getName().equalsIgnoreCase(name))
+                return module;
+        }
+
+        this.main.LOGGER.log(Level.WARNING, "Requested module not found: " + name);
+        return null;
     }
 
     /**
      * Registers modules to the module manager. Sets the state to active if `true` in the config.
      * @param module to register
      */
-    public void registerModule(Module module) {
+    public void registerModule(net.popzi.interfaces.Module module) {
         if (module == null) throw new IllegalArgumentException("Module cannot be null");
         boolean active = this.main.CFG.getData().getBoolean(module.getName());
         modules.put(module, false);
@@ -59,7 +69,7 @@ public class ModuleManager {
      * @param module to register
      */
     @SuppressWarnings("unused")
-    public void unregisterModule(Module module) {
+    public void unregisterModule(net.popzi.interfaces.Module module) {
         if (module == null) throw new IllegalArgumentException("Module cannot be null");
         modules.remove(module);
         this.main.LOGGER.log(Level.INFO, "Module unregistered: " + module.getName());
@@ -70,7 +80,7 @@ public class ModuleManager {
      * @param module to set
      */
     @SuppressWarnings("unused")
-    public void activateModule(Module module) {
+    public void activateModule(net.popzi.interfaces.Module module) {
         if (module == null) throw new IllegalArgumentException("Module cannot be null");
         if (modules.containsKey(module)) {
             modules.put(module, true);
@@ -152,7 +162,6 @@ public class ModuleManager {
             try {
                 wait();
             } catch (InterruptedException e) {
-                e.printStackTrace();
                 this.main.LOGGER.log(Level.SEVERE, "Event queue thread forced close with pending jobs! May cause issues!");
             }
         }

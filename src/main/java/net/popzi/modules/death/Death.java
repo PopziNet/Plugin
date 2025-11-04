@@ -1,7 +1,8 @@
-package net.popzi.death;
+package net.popzi.modules.death;
 
-import net.popzi.plugin.Main;
-import net.popzi.plugin.ModuleManager.Module;
+import net.popzi.Main;
+import net.popzi.interfaces.Module;
+import net.popzi.modules.BaseModule;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.Inventory;
@@ -13,16 +14,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Base64;
 
-public class Death implements Module {
-
-    private Main main;
+public class Death extends BaseModule {
 
     /**
      * Constructor
      * @param main Main plugin
      */
     public Death(Main main) {
-        this.main = main;
+        super(main);
     }
 
     @Override

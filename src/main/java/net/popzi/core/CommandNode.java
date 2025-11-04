@@ -1,4 +1,4 @@
-package net.popzi.plugin;
+package net.popzi.core;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -1,5 +1,6 @@
-package net.popzi.plugin;
+package net.popzi.core;
 
+import net.popzi.Main;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;

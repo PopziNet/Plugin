@@ -1,6 +1,8 @@
-package net.popzi.plugin;
+package net.popzi.core;
 
 import java.io.File;
+
+import net.popzi.Main;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.file.FileConfiguration;
 

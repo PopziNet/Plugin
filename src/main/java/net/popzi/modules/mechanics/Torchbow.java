@@ -1,7 +1,7 @@
-package net.popzi.mechanics;
+package net.popzi.modules.mechanics;
 
 import net.kyori.adventure.util.TriState;
-import net.popzi.plugin.Main;
+import net.popzi.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,7 +21,7 @@ import java.util.logging.Level;
 
 public class Torchbow {
 
-    private Main main;
+    private final Main main;
 
     public Torchbow(Main main) {
         this.main = main;
@@ -41,9 +41,12 @@ public class Torchbow {
         if (bow == null || !bow.displayName().toString().toLowerCase().contains("torch"))
             return;
 
-        if (inventory.contains(Material.TORCH) ||
+        if (
+                inventory.contains(Material.TORCH) ||
                 inventory.contains(Material.SOUL_TORCH) ||
-                inventory.contains(Material.REDSTONE_TORCH)) {
+                inventory.contains(Material.REDSTONE_TORCH) ||
+                inventory.contains(Material.COPPER_TORCH)
+        ) {
 
             // Here we can control the order of preference as to which torch type to use.
             // .first() returns -1 if the item cannot be found.
@@ -52,6 +55,8 @@ public class Torchbow {
                 torch_index = inventory.first(Material.SOUL_TORCH);
             if (torch_index == -1)
                 torch_index = inventory.first(Material.REDSTONE_TORCH);
+            if (torch_index == -1)
+                torch_index = inventory.first(Material.COPPER_TORCH);
 
             // Remove the torch from the inventory
             ItemStack torch = inventory.getItem(torch_index);
@@ -81,6 +86,8 @@ public class Torchbow {
             torch_type = Material.REDSTONE_TORCH;
         else if (projectile.getScoreboardTags().contains("SOUL_TORCH"))
             torch_type = Material.SOUL_TORCH;
+        else if (projectile.getScoreboardTags().contains("COPPER_TORCH"))
+            torch_type = Material.COPPER_TORCH;
         else {
             torch_type = null;
         }
@@ -129,6 +136,9 @@ public class Torchbow {
                     break;
                 case SOUL_TORCH:
                     placeType = Material.SOUL_WALL_TORCH;
+                    break;
+                case COPPER_TORCH:
+                    placeType = Material.COPPER_WALL_TORCH;
                     break;
             }
         } else if (face == BlockFace.DOWN) {

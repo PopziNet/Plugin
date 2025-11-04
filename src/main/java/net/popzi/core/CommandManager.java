@@ -1,17 +1,13 @@
-package net.popzi.plugin;
+package net.popzi.core;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.TabCompleter;
+import net.popzi.Main;
+import net.popzi.interfaces.BaseCommand;
+import net.popzi.interfaces.Module;
+import org.bukkit.command.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
 
@@ -20,9 +16,13 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     private final Main main;
     private final CommandNode root = new CommandNode("");
 
+    /**
+     * Constructor
+     * @param main instance of the plugin
+     */
     public CommandManager(Main main) {
         this.main = main;
-        PluginCommand cmd = this.main.getCommand("pn");
+        this.initializeCommandHooks();
         root
             .addChild("death")
                 .addChild("search")
@@ -32,27 +32,43 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             .addChild("event")
                 .addChild("start");
 
-        if (cmd != null)
-            cmd.setExecutor(this);
-
     }
+
+
+    /**
+     * Initializes our command hooks to the bukkit instance, per our plugin.yml file.
+     */
+    public void initializeCommandHooks() {
+        PluginCommand pn = this.main.getCommand("pn");
+        if (pn != null)
+            pn.setExecutor(this);
+
+        PluginCommand tour = this.main.getCommand("tour");
+        if (tour != null)
+            tour.setExecutor(this);
+    }
+
     /**
      * The onCommand handler
      * @param commandSender The player or entity or server executing the command
      * @param command The command its self ( />>pn<< foo bar 123 )
      * @param s The command as a string, for some reason ( />>pn<< foo bar 123 )
-     * @param strings The command arguments as an array ( /pn >>foo bar 123<< )
+     * @param args The command arguments as an array ( /pn >>foo bar 123<< )
      * @return boolean
      */
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
-
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
         this.main.LOGGER.log(Level.INFO, "Sender: " + commandSender.getName());
-        this.main.LOGGER.log(Level.INFO, "Command: " + command.getLabel() + " Name: " + command.getName());
+        this.main.LOGGER.log(Level.INFO, "Command Label: " + command.getLabel());
+        this.main.LOGGER.log(Level.INFO, "Command Name: " + command.getName());
         this.main.LOGGER.log(Level.INFO, "String: " + s);
-        this.main.LOGGER.log(Level.INFO, "StringS: " + Arrays.toString(strings));
+        this.main.LOGGER.log(Level.INFO, "Args[]: " + Arrays.toString(args));
 
-        return false;
+        Module tours = this.main.MODULE_MANAGER.getModule("MODULE_TOURS");
+        if (tours == null)
+            return false;
+
+        return tours.getCommand("Tour").execute(commandSender, args);
     }
 
     /**
