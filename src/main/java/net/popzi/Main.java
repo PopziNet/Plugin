@@ -48,6 +48,7 @@ public class Main extends JavaPlugin implements Listener {
         this.MODULE_MANAGER.registerModule(new Events(this));
         this.MODULE_MANAGER.registerModule(new Tours(this));
         this.MODULE_MANAGER.registerModule(new Tips(this));
+        this.MODULE_MANAGER.printModules();
         this.DISPATCH.Register();
         this.LOGGER.log(Level.INFO, "PopziNet Loaded");
     }

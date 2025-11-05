@@ -4,6 +4,8 @@ import net.popzi.Main;
 import net.popzi.interfaces.BaseCommand;
 import org.bukkit.command.CommandSender;
 
+import java.util.List;
+
 public class UnregisterTour implements BaseCommand {
     Main main;
 
@@ -13,7 +15,7 @@ public class UnregisterTour implements BaseCommand {
 
     @Override
     public String getName() {
-        return "UnregisterTour";
+        return "Unregister";
     }
 
     @Override
@@ -24,6 +26,11 @@ public class UnregisterTour implements BaseCommand {
     @Override
     public String getUsage() {
         return "/tour unregister <name>";
+    }
+
+    @Override
+    public List<String> getArgs() {
+        return List.of("<name>");
     }
 
     @Override

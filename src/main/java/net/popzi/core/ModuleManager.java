@@ -1,9 +1,11 @@
 package net.popzi.core;
 
 import net.popzi.Main;
+import net.popzi.interfaces.BaseCommand;
 import net.popzi.interfaces.Module;
 import org.bukkit.event.Event;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,7 +56,7 @@ public class ModuleManager {
      * Registers modules to the module manager. Sets the state to active if `true` in the config.
      * @param module to register
      */
-    public void registerModule(net.popzi.interfaces.Module module) {
+    public void registerModule(Module module) {
         if (module == null) throw new IllegalArgumentException("Module cannot be null");
         boolean active = this.main.CFG.getData().getBoolean(module.getName());
         modules.put(module, false);
@@ -69,7 +71,7 @@ public class ModuleManager {
      * @param module to register
      */
     @SuppressWarnings("unused")
-    public void unregisterModule(net.popzi.interfaces.Module module) {
+    public void unregisterModule(Module module) {
         if (module == null) throw new IllegalArgumentException("Module cannot be null");
         modules.remove(module);
         this.main.LOGGER.log(Level.INFO, "Module unregistered: " + module.getName());
@@ -80,7 +82,7 @@ public class ModuleManager {
      * @param module to set
      */
     @SuppressWarnings("unused")
-    public void activateModule(net.popzi.interfaces.Module module) {
+    public void activateModule(Module module) {
         if (module == null) throw new IllegalArgumentException("Module cannot be null");
         if (modules.containsKey(module)) {
             modules.put(module, true);
@@ -110,9 +112,22 @@ public class ModuleManager {
      */
     @SuppressWarnings({"unused", "CodeBlock2Expr"})
     public void printModules() {
+        this.main.LOGGER.log(Level.INFO, "Printing list of modules...");
         modules.forEach((module, isActive) -> {
             this.main.LOGGER.log(Level.INFO, "Module: " + module.getName() + " Active: " + isActive);
         });
+    }
+
+    /**
+     *  Returns a hashmap of all of our loaded module commands
+     */
+    public HashMap<String, BaseCommand> getAllCommands() {
+        HashMap<String, BaseCommand> commands = new HashMap<String, BaseCommand>();
+        modules.forEach((module, isActive) -> {
+            if (isActive)
+                commands.putAll(module.getCommands());
+        });
+        return commands;
     }
 
     /**

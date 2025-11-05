@@ -7,11 +7,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import java.util.List;
+
 public class Tour implements BaseCommand {
     Main main;
 
     public Tour(Main main) {
         this.main = main;
+        this.registerSubCommand(main, new RegisterTour(main));
+        this.registerSubCommand(main, new UnregisterTour(main));
     }
 
     @Override
@@ -30,6 +34,11 @@ public class Tour implements BaseCommand {
     }
 
     @Override
+    public List<String> getArgs() {
+        return null;
+    }
+
+    @Override
     public String getPermission() {
         return "pn.tour";
     }
@@ -41,5 +50,14 @@ public class Tour implements BaseCommand {
 
         senderPlayer.openInventory(navigationInventory);
         return true;
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender, String[] args) {
+        // TODO: Potentially review if this is something that can be implementation default
+        return this.getSubCommands().keySet().stream()
+                .filter(s -> s.startsWith(args[0].toLowerCase()))
+                .sorted()
+                .toList();
     }
 }

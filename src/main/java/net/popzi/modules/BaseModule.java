@@ -23,8 +23,8 @@ public abstract class BaseModule implements Module {
 
     @Override
     public void registerCommand(BaseCommand cmd) {
-        this.main.getLogger().log(Level.INFO, "Registered Command: " + cmd.getName());
-        this.cmds.put(cmd.getName(), cmd);
+        this.main.getLogger().log(Level.INFO, "Registered Command: " + cmd.getName().toLowerCase());
+        this.cmds.put(cmd.getName().toLowerCase(), cmd);
     }
 
     @Override
