@@ -51,7 +51,7 @@ public class Death extends BaseModule {
     public void SQLInsertDeath(PlayerDeathEvent event) {
         // Deconstruct all event variables into required formats
         String UUID = event.getEntity().getUniqueId().toString();
-        String World = event.getEntity().getLocation().getWorld().getName();
+        String World = event.getEntity().getLocation().getWorld().getUID().toString();
         int X = event.getEntity().getLocation().getBlockX();
         int Y = event.getEntity().getLocation().getBlockY();
         int Z = event.getEntity().getLocation().getBlockZ();
