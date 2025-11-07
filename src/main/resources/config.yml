@@ -55,7 +55,7 @@ MODULE_TIPS: true
 
 # Determines if zombies drop membranes
 ZOMBIE_DROP_MEMBRANES: true
-ZOMBIE_DROP_MEMBRANES_CHANCE: 0.05
+ZOMBIE_DROP_MEMBRANES_CHANCE: 0.02
 
 # Determines if the rain overhaul system should be active
 RAIN_OVERHAUL: true # TODO
@@ -120,8 +120,11 @@ TORCH_BOW_ENABLE: true
 # +------------------------------------------------------+ #
 ############################################################
 
+# Tips should occur once every X ticks
+TIPS_FREQUENCY: 144000 # 2 Hours (20 ticks a second * 60 for minute * 60 for hour * 2 for num hours)
+
 TIPS: [
-  "If 'torch' is in the name of a bow, it will shoot torches onto walls",
+  "If 'torch' is in the name of a cross/bow, it can shoot your torches onto walls (mostly) without setting fire to them!",
   "Phantoms only spawn on Fridays",
   "You can /tour the best builds on the server, let us know if your build should be added!",
   "Player heads have a 0.4% chance of dropping when killed with a sword. 7% if the sword has a sweeping edge!",
@@ -129,4 +132,6 @@ TIPS: [
   "There are a variety of secret gimmicks hidden in our plugins source code.",
   "The server restarts every Thursday and Monday at midnight",
   "We have an online map in /motd which you can view in 3D",
+  "Jumping more than 100 blocks onto hard surfaces can have adverse health effects.",
+  ""
 ]
