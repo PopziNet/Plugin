@@ -1,16 +1,16 @@
 package net.popzi.modules.tours.commands;
 
-import net.popzi.Main;
 import net.popzi.interfaces.BaseCommand;
+import net.popzi.modules.tours.Tours;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
 public class UnregisterTour implements BaseCommand {
-    Main main;
+    Tours tours;
 
-    public UnregisterTour(Main main) {
-        this.main = main;
+    public UnregisterTour(Tours tours) {
+        this.tours = tours;
     }
 
     @Override

@@ -3,6 +3,7 @@ package net.popzi.modules.tours.commands;
 import net.popzi.Main;
 import net.popzi.core.Serializer;
 import net.popzi.interfaces.BaseCommand;
+import net.popzi.modules.tours.Tours;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,10 +18,10 @@ import java.util.logging.Level;
 
 public class RegisterTour implements BaseCommand {
 
-    Main main;
+    Tours tours;
 
-    public RegisterTour(Main main) {
-        this.main = main;
+    public RegisterTour(Tours tours) {
+        this.tours = tours;
     }
 
     @Override
@@ -57,7 +58,7 @@ public class RegisterTour implements BaseCommand {
         if (icon.isEmpty()) return false;
         if (args.length != 2) return false;
 
-        this.main.LOGGER.log(Level.INFO, Arrays.toString(args));
+        this.tours.main.LOGGER.log(Level.INFO, Arrays.toString(args));
 
         // Prepare for db
         String iconSerialized = Serializer.itemToBase64(icon);
@@ -69,7 +70,7 @@ public class RegisterTour implements BaseCommand {
         int distance = Integer.parseInt(args[1]);
 
         // Insert
-        try (Connection c = this.main.DB.connect()) {
+        try (Connection c = this.tours.main.DB.connect()) {
             PreparedStatement statement = c.prepareStatement(
                     "INSERT INTO Tours (Name, World, X, Y, Z, Distance, IconItemStackB64) VALUES (?, ?, ?, ?, ?, ?, ?);"
             );

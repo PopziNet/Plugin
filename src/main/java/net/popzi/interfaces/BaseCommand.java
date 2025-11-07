@@ -36,8 +36,9 @@ public interface BaseCommand {
         return subCommands;
     };
 
-    default void registerSubCommand(Main main, BaseCommand subCommand) {
-        main.LOGGER.log(Level.INFO, "Registered SubCommand: " + subCommand.getName().toLowerCase());
+    default <T> void registerSubCommand(T parentClass, BaseCommand subCommand) {
+        if (parentClass instanceof Main)
+            ((Main) parentClass).LOGGER.log(Level.INFO, "Registered SubCommand: " + subCommand.getName().toLowerCase());
         subCommands.put(subCommand.getName().toLowerCase(), subCommand);
     }
 
@@ -45,8 +46,6 @@ public interface BaseCommand {
 
     default List<String> tabComplete(CommandSender sender, String[] args) {
         return Collections.emptyList();
-
-
     }
 
 }

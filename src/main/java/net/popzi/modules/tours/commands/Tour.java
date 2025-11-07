@@ -1,9 +1,9 @@
 package net.popzi.modules.tours.commands;
 
 import net.kyori.adventure.text.Component;
-import net.popzi.Main;
 import net.popzi.core.Serializer;
 import net.popzi.interfaces.BaseCommand;
+import net.popzi.modules.tours.Tours;
 import net.popzi.sql.SQL;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,12 +17,12 @@ import java.sql.*;
 import java.util.List;
 
 public class Tour implements BaseCommand {
-    Main main;
+    Tours tours;
 
-    public Tour(Main main) {
-        this.main = main;
-        this.registerSubCommand(main, new RegisterTour(main));
-        this.registerSubCommand(main, new UnregisterTour(main));
+    public Tour(Tours tours) {
+        this.tours = tours;
+        this.registerSubCommand(tours.main, new RegisterTour(this.tours));
+        this.registerSubCommand(tours.main, new UnregisterTour(this.tours));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class Tour implements BaseCommand {
     public boolean execute(CommandSender sender, String[] args) {
 
         // Create inventory
-        Inventory navigationInventory = Bukkit.createInventory(null, 54, Component.text("Server Tours!"));
+        Inventory navigationInventory = Bukkit.createInventory(null, 54, this.tours.GUI_TITLE);
         Player senderPlayer = (Player) sender;
 
         // Setup menu icons
@@ -72,7 +72,7 @@ public class Tour implements BaseCommand {
         navigationInventory.setItem(iNext, itmNext);
 
         // Obtain data
-        try (Connection c = this.main.DB.connect()) {
+        try (Connection c = this.tours.main.DB.connect()) {
             PreparedStatement s = c.prepareStatement("SELECT * FROM Tours;");
             ResultSet r = s.executeQuery();
             List<net.popzi.records.Tour> re = SQL.map(r, net.popzi.records.Tour.class);
