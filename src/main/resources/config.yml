@@ -73,17 +73,18 @@ RAIN_CHANCE_THUNDER: 10 # TODO
 RAIN_LOCKOUT_MINUTES: 120 # TODO
 
 # Determines if player heads should drop when killed with a sword
-PLAYER_HEADS_ENABLE: true # TODO
-PLAYER_HEADS_DROP_CHANCE: 0.04 # TODO
+PLAYER_HEADS_ENABLE: true
+PLAYER_HEADS_DROP_CHANCE: 0.04
 
 # Determines if swords enchanted with sweeping edge should increase
 # the drop chances, and what the new chance should be.
-PLAYER_HEADS_SWEEP_ENABLE: true # TODO
-PLAYER_HEADS_SWEEP_DROP_CHANCE: 0.07 # TODO
+PLAYER_HEADS_SWEEP_ENABLE: true
+PLAYER_HEADS_SWEEP_DROP_CHANCE: 0.07
 
 # Determines if torch bows should be enabled, allowing players to shoot torches onto walls
 # if their cross/bow contains "Torch" in the name
 TORCH_BOW_ENABLE: true
+TORCH_BOW_ENABLED_FIRE_CHANCE: 0.05
 
 ############################################################
 # +------------------------------------------------------+ #

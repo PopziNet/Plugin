@@ -72,11 +72,14 @@ public class Mechanics extends BaseModule {
             ItemStack weapon = killer.getInventory().getItemInMainHand();
 
             if (ITEMS_SWORDS.isTagged(weapon.getType())) {
+                if (!this.main.CFG.getData().getBoolean("PLAYER_HEADS_ENABLE")) return;
                 double number = Math.random(); // 0.0 -- to -- 1.0
-                double dropChance = 0.007;
+                double dropChance = this.main.CFG.getData().getDouble("PLAYER_HEADS_DROP_CHANCE");
 
-                if (weapon.getEnchantments().get(Enchantment.SWEEPING_EDGE) != null)
-                    dropChance = 0.04;
+                if (weapon.getEnchantments().get(Enchantment.SWEEPING_EDGE) != null) {
+                    if (this.main.CFG.getData().getBoolean("PLAYER_HEADS_SWEEP_ENABLE"))
+                        dropChance = this.main.CFG.getData().getDouble("PLAYER_HEADS_SWEEP_DROP_CHANCE");
+                }
 
                 if (dropChance > number) { // A drop is to occur.
                     ItemStack head = ItemStack.of(Material.PLAYER_HEAD);
@@ -99,7 +102,7 @@ public class Mechanics extends BaseModule {
         if (!main.CFG.getData().getBoolean("ZOMBIE_DROP_MEMBRANES"))
             return;
 
-        int dropChance = main.CFG.getData().getInt("ZOMBIE_DROP_MEMBRANES_CHANCE");
+        double dropChance = main.CFG.getData().getDouble("ZOMBIE_DROP_MEMBRANES_CHANCE");
 
         if (e.getEntity().getType().equals(EntityType.ZOMBIE)) {
             double number = Math.random();
@@ -170,12 +173,9 @@ public class Mechanics extends BaseModule {
         this.main.LOGGER.log(Level.INFO, "Entity picked up: " + l.getBlockX() + ", " + l.getBlockY() + ", " + l.getBlockZ() + ", Type: " + event.getEntity().getType());
 
         // Spawn a giant zombie
-        this.main.getServer().getScheduler().runTaskLater(this.main, new Runnable() {
-            @Override
-            public void run() {
-                event.getItem().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.GIANT);
-                event.getEntity().remove();
-            }
+        this.main.getServer().getScheduler().runTaskLater(this.main, () -> {
+            event.getItem().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.GIANT);
+            event.getEntity().remove();
         }, 1L);
 
     }

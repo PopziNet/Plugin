@@ -104,9 +104,6 @@ public class Torchbow {
         if (block == null | face == null)
             return;
 
-        // TODO: Small chance to set the block on fire, rather than place the torch.
-        // TODO: After all... Why not? Why shouldn't I let the players have all the fun?
-
         // Get the block we need to think about altering
         Block alterationBlock = block.getRelative(face);
 
@@ -119,11 +116,14 @@ public class Torchbow {
         if (!alterationBlock.isEmpty() && !alterationBlock.isLiquid())
             return;
 
-        // Now handle direction: floor vs. wall torches
         Material placeType = torch_type;
 
-        // Wall torches are different block types
-        if (face != BlockFace.UP && face != BlockFace.DOWN) {
+        // Small chance to set the block on fire, rather than place the torch.
+        // After all... Why not? Why shouldn't I let the players have all the fun?
+        if (this.main.CFG.getData().getDouble("TORCH_BOW_ENABLED_FIRE_CHANCE") > Math.random()) placeType = Material.FIRE;
+
+        // If we've hit a wall
+        if (face != BlockFace.UP && face != BlockFace.DOWN && placeType != Material.FIRE) {
             placeType = switch (torch_type) {
                 case TORCH -> Material.WALL_TORCH;
                 case REDSTONE_TORCH -> Material.REDSTONE_WALL_TORCH;
@@ -146,6 +146,7 @@ public class Torchbow {
                 alterationBlock.setBlockData(directional);
             }
             projectile.remove();
+            alterationBlock.tick();
             this.main.LOGGER.log(Level.INFO, "Placed torch type: " + finalPlaceType + " facing " + face);
         });
     }
