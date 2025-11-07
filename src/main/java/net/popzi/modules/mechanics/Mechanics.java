@@ -131,12 +131,7 @@ public class Mechanics extends BaseModule {
         for (Entity entity : event.getChunk().getEntities()) {
             if (entity.getType() == EntityType.ZOMBIE_HORSE) {
                 if (entity.getName().equalsIgnoreCase("zombie horse")) {
-                    this.main.getServer().getScheduler().runTaskLater(this.main, new Runnable() {
-                        @Override
-                        public void run() {
-                            entity.remove();
-                        }
-                    }, 1L);
+                    this.main.getServer().getScheduler().runTaskLater(this.main, entity::remove, 1L);
                 }
             }
         }
