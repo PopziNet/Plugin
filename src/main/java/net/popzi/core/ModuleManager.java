@@ -39,7 +39,7 @@ public class ModuleManager {
      * @param name of the module as a string
      * @return module of the requested name
      */
-    @SuppressWarnings("Unused")
+    @SuppressWarnings("unused")
     public Module getModule(String name) {
         if (name == null || name.isEmpty())
             throw new IllegalArgumentException("Module name cannot be null or empty");

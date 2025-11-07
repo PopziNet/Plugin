@@ -10,7 +10,7 @@ package net.popzi.records;
  * @param Z location as int
  * @param Inventory inventory as base64
  */
-@SuppressWarnings("Unused")
+@SuppressWarnings("unused")
 public record Death (
         String UUID,
         String Created,

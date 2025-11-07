@@ -18,15 +18,15 @@ public interface BaseCommand {
 
     String getName();
 
-    @SuppressWarnings("Unused")
+    @SuppressWarnings("unused")
     String getDescription();
 
-    @SuppressWarnings("Unused")
+    @SuppressWarnings("unused")
     String getUsage();
 
     List<String> getArgs();
 
-    @SuppressWarnings("Unused")
+    @SuppressWarnings("unused")
     String getPermission();
 
     // Sub commands
