@@ -1,9 +1,12 @@
 package net.popzi.core;
 
 import net.popzi.Main;
+import net.popzi.modules.tours.Tours;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.world.ChunkLoadEvent;
 
 /***
@@ -92,6 +95,18 @@ public class EventDispatcher implements Listener {
     public void onItemPickup(EntityPickupItemEvent event) {
         this.main.MODULE_MANAGER.pushEvent(event);
     }
+
+    /**
+     * Listens for inventory clicks
+     * @param event the inventory click
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    @SuppressWarnings("Unused")
+    public void onInventoryClickEvent(InventoryClickEvent event) {
+        this.main.MODULE_MANAGER.pushEventSingleThreaded(event);
+
+    }
+
 
 
 }
