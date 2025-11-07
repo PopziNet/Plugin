@@ -132,12 +132,24 @@ public class ModuleManager {
 
     /**
      * Pushes server events to all modules so that they can be handled
+     * @apiNote Does NOT support cancellation of events! Use pushEventSingleThreaded instead.
      * @param event to handle
      */
     public void pushEvent(Event event) {
-        // if (!event.getEventName().equalsIgnoreCase("ChunkLoadEvent"))
-        //    this.main.LOGGER.log(Level.INFO, "Queueing event: " + event.getEventName());
+         // if (!event.getEventName().equalsIgnoreCase("ChunkLoadEvent"))
+         //    this.main.LOGGER.log(Level.INFO, "Queueing event: " + event.getEventName());
         this.eventQueue.add(event);
+    }
+
+    /**
+     * Pushes server events to all modules so that they can be handled.
+     * @apiNote is single threaded and supports the use of event cancellation.
+     * @param event to handle
+     */
+    public void pushEventSingleThreaded(Event event) {
+        modules.forEach((module, isActive) -> {
+            if (isActive) module.handleEvent(event);
+        });
     }
 
     /**
@@ -150,14 +162,15 @@ public class ModuleManager {
             while (true) {
                 try {
                     Event event = eventQueue.take(); // Waits for an event
-                    //this.main.LOGGER.log(Level.INFO, "Processing event: " + event.getEventName());
+                    // this.main.LOGGER.log(Level.INFO, "Processing event: " + event.getEventName());
                     modules.forEach((module, isActive) -> {
-                        if (isActive) {
-                            module.handleEvent(event);
-                        }
+                        if (isActive) module.handleEvent(event);
                     });
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt(); // Restore the interrupted status
+                } catch (Exception e) {
+                    this.main.LOGGER.log(Level.SEVERE, "Event processor interrupted! Attempting to start a new thread");
+                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                    this.startEventProcessor();
                     break;
                 }
             }
