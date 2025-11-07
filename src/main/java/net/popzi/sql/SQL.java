@@ -7,7 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SQL {
 
@@ -50,5 +54,33 @@ public class SQL {
             connection = DriverManager.getConnection(this.URI);
         }
         return connection;
+    }
+
+    /**
+     * Converts a ResultSet to a List<T> of a Record type
+     * @apiNote Example: SQL.map(rs, net.popzi.records.Tour.class)
+     * @param rs the ResultSet returned from the database
+     * @param type the class of the Record to convert to (E.g. Car.class)
+     * @return List<T> of that Record type
+     * @param <T> the Record class
+     * @throws Exception if it's unable to convert
+     */
+    public static <T> List<T> map(ResultSet rs, Class<T> type) throws Exception {
+        List<T> list = new ArrayList<>();
+        var fields = type.getDeclaredFields();
+
+        while (rs.next()) {
+            Object[] args = new Object[fields.length];
+            for (int i = 0; i < fields.length; i++) {
+                args[i] = rs.getObject(fields[i].getName());
+            }
+            list.add(
+                    type.getDeclaredConstructor(Arrays.stream(fields)
+                            .map(Field::getType)
+                            .toArray(Class[]::new))
+                    .newInstance(args));
+        }
+
+        return list;
     }
 }

@@ -114,6 +114,9 @@ public class Torchbow {
         if (block == null | face == null)
             return;
 
+        // TODO: Small chance to set the block on fire, rather than place the torch.
+        // TODO: After all... Why not? Why shouldn't I let the players have all the fun?
+
         // Get the block we need to think about altering
         Block alterationBlock = block.getRelative(face);
 
