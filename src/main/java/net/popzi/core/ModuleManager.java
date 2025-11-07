@@ -122,7 +122,7 @@ public class ModuleManager {
      *  Returns a hashmap of all of our loaded module commands
      */
     public HashMap<String, BaseCommand> getAllCommands() {
-        HashMap<String, BaseCommand> commands = new HashMap<String, BaseCommand>();
+        HashMap<String, BaseCommand> commands = new HashMap<>();
         modules.forEach((module, isActive) -> {
             if (isActive)
                 commands.putAll(module.getCommands());
@@ -167,8 +167,7 @@ public class ModuleManager {
                         if (isActive) module.handleEvent(event);
                     });
                 } catch (Exception e) {
-                    this.main.LOGGER.log(Level.SEVERE, "Event processor interrupted! Attempting to start a new thread");
-                    e.printStackTrace();
+                    this.main.LOGGER.log(Level.SEVERE, "Event processor interrupted! Attempting to start a new thread", e);
                     Thread.currentThread().interrupt();
                     this.startEventProcessor();
                     break;

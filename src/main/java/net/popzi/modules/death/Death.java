@@ -1,7 +1,6 @@
 package net.popzi.modules.death;
 
 import net.popzi.Main;
-import net.popzi.interfaces.Module;
 import net.popzi.modules.BaseModule;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.PlayerDeathEvent;

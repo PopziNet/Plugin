@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.logging.Level;
 
@@ -85,18 +86,7 @@ public class Torchbow {
 
         // Handle the projectile
         Entity projectile = event.getEntity();
-        Material torch_type;
-        if (projectile.getScoreboardTags().contains("TORCH"))
-            torch_type = Material.TORCH;
-        else if (projectile.getScoreboardTags().contains("REDSTONE_TORCH"))
-            torch_type = Material.REDSTONE_TORCH;
-        else if (projectile.getScoreboardTags().contains("SOUL_TORCH"))
-            torch_type = Material.SOUL_TORCH;
-        else if (projectile.getScoreboardTags().contains("COPPER_TORCH"))
-            torch_type = Material.COPPER_TORCH;
-        else {
-            torch_type = null;
-        }
+        Material torch_type = getMaterialByTags(projectile);
 
         if (torch_type == null)
             return;
@@ -123,9 +113,7 @@ public class Torchbow {
         // Ensure the target block can handle a torch, and is replaceable (air, water, etc.)
         if (!canSupportTorch(block, face)) {
             // Drop a torch item at the hit block location
-            Bukkit.getScheduler().runTask(this.main, () -> {
-                alterationBlock.getWorld().dropItemNaturally(alterationBlock.getLocation(), new ItemStack(torch_type, 1));
-            });
+            Bukkit.getScheduler().runTask(this.main, () -> alterationBlock.getWorld().dropItemNaturally(alterationBlock.getLocation(), new ItemStack(torch_type, 1)));
             return;
         }
         if (!alterationBlock.isEmpty() && !alterationBlock.isLiquid())
@@ -136,20 +124,13 @@ public class Torchbow {
 
         // Wall torches are different block types
         if (face != BlockFace.UP && face != BlockFace.DOWN) {
-            switch (torch_type) {
-                case TORCH:
-                    placeType = Material.WALL_TORCH;
-                    break;
-                case REDSTONE_TORCH:
-                    placeType = Material.REDSTONE_WALL_TORCH;
-                    break;
-                case SOUL_TORCH:
-                    placeType = Material.SOUL_WALL_TORCH;
-                    break;
-                case COPPER_TORCH:
-                    placeType = Material.COPPER_WALL_TORCH;
-                    break;
-            }
+            placeType = switch (torch_type) {
+                case TORCH -> Material.WALL_TORCH;
+                case REDSTONE_TORCH -> Material.REDSTONE_WALL_TORCH;
+                case SOUL_TORCH -> Material.SOUL_WALL_TORCH;
+                case COPPER_TORCH -> Material.COPPER_WALL_TORCH;
+                default -> placeType;
+            };
         } else if (face == BlockFace.DOWN) {
             return; // Can't place torches upside down
         }
@@ -167,6 +148,27 @@ public class Torchbow {
             projectile.remove();
             this.main.LOGGER.log(Level.INFO, "Placed torch type: " + finalPlaceType + " facing " + face);
         });
+    }
+
+    /**
+     * Gets the material based on tags assigned to the projectile
+     * @param projectile to examine
+     * @return Material as determined by the tags assigned to the projectile.
+     */
+    private static @Nullable Material getMaterialByTags(Entity projectile) {
+        Material torch_type;
+        if (projectile.getScoreboardTags().contains("TORCH"))
+            torch_type = Material.TORCH;
+        else if (projectile.getScoreboardTags().contains("REDSTONE_TORCH"))
+            torch_type = Material.REDSTONE_TORCH;
+        else if (projectile.getScoreboardTags().contains("SOUL_TORCH"))
+            torch_type = Material.SOUL_TORCH;
+        else if (projectile.getScoreboardTags().contains("COPPER_TORCH"))
+            torch_type = Material.COPPER_TORCH;
+        else {
+            torch_type = null;
+        }
+        return torch_type;
     }
 
     /**

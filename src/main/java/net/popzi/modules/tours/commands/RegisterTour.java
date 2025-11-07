@@ -1,6 +1,5 @@
 package net.popzi.modules.tours.commands;
 
-import net.popzi.Main;
 import net.popzi.core.Serializer;
 import net.popzi.interfaces.BaseCommand;
 import net.popzi.modules.tours.Tours;
@@ -83,7 +82,7 @@ public class RegisterTour implements BaseCommand {
             statement.setString(7, iconSerialized);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            this.tours.main.LOGGER.log(Level.WARNING, "Failed to insert into database", e);
             return false;
         }
 

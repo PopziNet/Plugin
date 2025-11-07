@@ -1,7 +1,6 @@
 package net.popzi.core;
 
 import net.popzi.Main;
-import net.popzi.modules.tours.Tours;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

@@ -34,7 +34,7 @@ public interface BaseCommand {
 
     default HashMap<String, BaseCommand> getSubCommands() {
         return subCommands;
-    };
+    }
 
     default <T> void registerSubCommand(T parentClass, BaseCommand subCommand) {
         if (parentClass instanceof Main)

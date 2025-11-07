@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.sql.*;
 import java.util.List;
+import java.util.logging.Level;
 
 public class Tour implements BaseCommand {
     Tours tours;
@@ -84,7 +85,7 @@ public class Tour implements BaseCommand {
             });
 
         } catch (Exception e) {
-            e.printStackTrace();
+            this.tours.main.LOGGER.log(Level.WARNING, "Failed to retrieve from database", e);
             return false;
         }
 
