@@ -11,6 +11,8 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -20,6 +22,7 @@ import static org.bukkit.Tag.ITEMS_SWORDS;
 public class Mechanics extends BaseModule {
 
     private final Torchbow torchbow;
+    public boolean insomniaActive;
 
     /**
      * Constructor
@@ -28,6 +31,8 @@ public class Mechanics extends BaseModule {
     public Mechanics(Main main) {
         super(main);
         this.torchbow = new Torchbow(main);
+        this.insomniaActive = false;
+        this.startCronTimer();
     }
 
     @Override
@@ -172,6 +177,35 @@ public class Mechanics extends BaseModule {
             event.getItem().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.GIANT);
             event.getEntity().remove();
         }, 1L);
+    }
 
+    /**
+     * Setups up a bukkit timer to run every hour for miscellaneous things like what day it currently is,
+     * permitting things like phantoms to spawn.
+     */
+    public void startCronTimer() {
+        this.main.getServer().getScheduler().runTaskTimer(this.main, () -> {
+
+            // Get the current day.
+            // 0 = Sunday, 7 = Saturday
+            Calendar c = Calendar.getInstance();
+            int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+
+            // Get world
+            World world = this.main.getServer().getWorld("world");
+            if (world == null) return;
+
+            // Get config
+            @SuppressWarnings("unchecked") // We're 95% sure this will be a list of ints! User error if not.
+            List<Integer> x = (List<Integer>) this.main.CFG.getData().getList("PHANTOMS_ENABLED_DAYS");
+            if (x == null) return;
+
+            // Turn phantoms on for Fridays
+            if (x.contains(dayOfWeek)) {
+                world.setGameRule(GameRule.DO_INSOMNIA, true);
+            } else {
+                world.setGameRule(GameRule.DO_INSOMNIA, false);
+            }
+        }, 20*10L,7200L); // 1H intervals
     }
 }
