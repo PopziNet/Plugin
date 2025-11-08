@@ -109,6 +109,15 @@ public class ModuleManager {
     }
 
     /**
+     * Reloads all modules based on the server config file
+     * TODO: Implement this.
+     */
+    @SuppressWarnings("unused")
+    public void reloadModules() {
+
+    }
+
+    /**
      * Prints out all of our modules and the state they're in. Useful for debugging.
      */
     @SuppressWarnings({"unused", "CodeBlock2Expr"})

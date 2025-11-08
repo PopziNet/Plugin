@@ -60,7 +60,7 @@ public class Death extends BaseModule {
             try ( // Upload into database
                 Connection c = this.main.DB.connect()
             ) {
-                PreparedStatement statement = c.prepareStatement("INSERT INTO Deaths (UUID, World, X, Y, Z, Inventory) VALUES (?, ?, ?, ?, ?, ?);");
+                PreparedStatement statement = c.prepareStatement("INSERT INTO Deaths (UUID, world, x, y, z, inventory) VALUES (?, ?, ?, ?, ?, ?);");
                 statement.setString(1, UUID);
                 statement.setString(2, World);
                 statement.setInt(3, X);
