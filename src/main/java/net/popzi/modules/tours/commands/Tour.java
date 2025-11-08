@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.popzi.core.Serializer;
 import net.popzi.interfaces.BaseCommand;
 import net.popzi.modules.tours.Tours;
-import net.popzi.sql.SQL;
+import net.popzi.modules.tours.sql.getTours;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -15,7 +15,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.sql.*;
 import java.util.List;
-import java.util.logging.Level;
 
 public class Tour implements BaseCommand {
     Tours tours;
@@ -24,6 +23,7 @@ public class Tour implements BaseCommand {
         this.tours = tours;
         this.registerSubCommand(tours.main, new RegisterTour(this.tours));
         this.registerSubCommand(tours.main, new UnregisterTour(this.tours));
+        this.registerSubCommand(tours.main, new ExitTour(this.tours));
     }
 
     @Override
@@ -73,21 +73,14 @@ public class Tour implements BaseCommand {
         navigationInventory.setItem(iNext, itmNext);
 
         // Obtain data
-        try (Connection c = this.tours.main.DB.connect()) {
-            PreparedStatement s = c.prepareStatement("SELECT * FROM Tours;");
-            ResultSet r = s.executeQuery();
-            List<net.popzi.records.Tour> re = SQL.map(r, net.popzi.records.Tour.class);
+        List<net.popzi.records.Tour> re = getTours.get(this.tours.main);
+        if (re == null) return false;
 
-            // Map data, TODO: Page Handling
-            re.forEach(tour -> {
-                ItemStack itmTour = Serializer.itemFromBase64(tour.IconItemStackB64());
-                navigationInventory.setItem(re.indexOf(tour), itmTour);
-            });
-
-        } catch (Exception e) {
-            this.tours.main.LOGGER.log(Level.WARNING, "Failed to retrieve from database", e);
-            return false;
-        }
+        // Todo: account for pagination
+        re.forEach(tour -> {
+            ItemStack itmTour = Serializer.itemFromBase64(tour.iconItemStackB64());
+            navigationInventory.setItem(re.indexOf(tour), itmTour);
+        });
 
         // Showtime
         senderPlayer.openInventory(navigationInventory);

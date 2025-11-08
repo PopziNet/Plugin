@@ -6,6 +6,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 
 /***
@@ -90,7 +92,7 @@ public class EventDispatcher implements Listener {
      * @param event the entity picking up the item
      */
     @EventHandler
-    @SuppressWarnings("Unused")
+    @SuppressWarnings("unused")
     public void onItemPickup(EntityPickupItemEvent event) {
         this.main.MODULE_MANAGER.pushEvent(event);
     }
@@ -100,12 +102,28 @@ public class EventDispatcher implements Listener {
      * @param event the inventory click
      */
     @EventHandler(priority = EventPriority.HIGHEST)
-    @SuppressWarnings("Unused")
+    @SuppressWarnings("unused")
     public void onInventoryClickEvent(InventoryClickEvent event) {
         this.main.MODULE_MANAGER.pushEventSingleThreaded(event);
-
     }
 
+    /**
+     * Listens for player join events
+     * @param event of the player joining
+     */
+    @EventHandler
+    @SuppressWarnings("unused")
+    public void onPlayerJoinEvent(PlayerJoinEvent event) {
+        this.main.MODULE_MANAGER.pushEventSingleThreaded(event);
+    }
 
-
+    /**
+     * Listens for player move events
+     * @param event of the player moving
+     */
+    @EventHandler
+    @SuppressWarnings("unused")
+    public void onPlayerMoveEvent(PlayerMoveEvent event) {
+        this.main.MODULE_MANAGER.pushEvent(event);
+    }
 }

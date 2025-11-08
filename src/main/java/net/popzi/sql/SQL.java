@@ -72,7 +72,14 @@ public class SQL {
         while (rs.next()) {
             Object[] args = new Object[fields.length];
             for (int i = 0; i < fields.length; i++) {
-                args[i] = rs.getObject(fields[i].getName());
+                Field field = fields[i];
+                Object value = rs.getObject(field.getName());
+
+                // Handle nulls for primitive int fields
+                if (value == null && field.getType().equals(int.class))
+                    value = 0;
+
+                args[i] = value;
             }
             list.add(
                     type.getDeclaredConstructor(Arrays.stream(fields)
