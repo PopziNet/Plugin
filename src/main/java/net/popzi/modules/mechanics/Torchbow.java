@@ -119,7 +119,7 @@ public class Torchbow {
         Material placeType = torch_type;
 
         // Small chance to set the block on fire, rather than place the torch.
-        // After all... Why not? Why shouldn't I let the players have all the fun?
+        // After all... Why not? Why should I let the players have all the fun?
         if (this.main.CFG.getData().getDouble("TORCH_BOW_ENABLED_FIRE_CHANCE") > Math.random()) placeType = Material.FIRE;
 
         // If we've hit a wall
@@ -177,7 +177,6 @@ public class Torchbow {
      * Torches can only be placed on solid, full faces (no glass, leaves, etc.).
      */
     private boolean canSupportTorch(Block baseBlock, BlockFace face) {
-
         // Torches require a sturdy face (Minecraft logic)
         return baseBlock.getBlockData().isFaceSturdy(face, BlockSupport.FULL);
     }
