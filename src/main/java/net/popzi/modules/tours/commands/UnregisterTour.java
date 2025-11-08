@@ -49,7 +49,7 @@ public class UnregisterTour implements BaseCommand {
         // TODO: Remove anyone who may be on that tour
         //  (Not really needed since a reconnect will cover them, but nice to have)
         sendee.sendMessage(name + " removed: " + unregistered);
-        return false;
+        return true;
     }
 
     @Override

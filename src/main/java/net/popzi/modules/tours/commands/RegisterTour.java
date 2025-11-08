@@ -50,8 +50,8 @@ public class RegisterTour implements BaseCommand {
         // Get the item in the players hand
         Player sendee = (Player) sender;
         ItemStack icon = sendee.getInventory().getItemInMainHand();
-        if (icon.isEmpty()) return false;
-        if (args.length != 2) return false;
+        if (icon.isEmpty()) return true;
+        if (args.length != 2) return true;
 
         // Insert
         boolean registered = registerTour.register(
@@ -67,7 +67,7 @@ public class RegisterTour implements BaseCommand {
 
         // Inform
         sendee.sendMessage(args[0] + " registered: " + registered);
-        return false;
+        return true;
     }
 
     @Override

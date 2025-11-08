@@ -74,7 +74,7 @@ public class Tour implements BaseCommand {
 
         // Obtain data
         List<net.popzi.records.Tour> re = getTours.get(this.tours.main);
-        if (re == null) return false;
+        if (re == null) return true;
 
         // Todo: account for pagination
         re.forEach(tour -> {

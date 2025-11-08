@@ -46,10 +46,8 @@ public class ExitTour implements BaseCommand {
     public boolean execute(CommandSender sender, String[] args) {
         Player player = (Player) sender;
         ToursPlayers playerState = getPlayerState.get(this.tours.main, player);
-        if (playerState != null) {
+        if (playerState != null)
             this.tours.exitTour(player, playerState);
-            return true;
-        }
-        return false;
+        return true;
     }
 }
