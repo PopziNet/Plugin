@@ -7,9 +7,19 @@ website: https://popzi.net
 api-version: '1.21.10'
 commands:
   pn:
-    description: /pn staff command
-    usage: /pn
+    description: The staff command for the PopziNet server
+    usage: /<command>
   tour:
     description: Take a tour of the servers best builds!
-    usage: /tour
+    usage: /<command> <register|unregister|exit> <name> <distance>
     aliases: /tour
+permissions:
+  pn.tour:
+    default: true
+    description: Allows users to use basic tour functionality
+  pn.tour.register:
+    default: op
+    description: Allows ops to register new tour locations
+  pn.tour.unregister:
+    default: op
+    description: Allows ops to unregister tour locations

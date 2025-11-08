@@ -1,5 +1,7 @@
 package net.popzi.core;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.popzi.Main;
 import net.popzi.interfaces.BaseCommand;
 import org.bukkit.command.*;
@@ -58,7 +60,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         // Null check
         if (cmd == null) {
             commandSender.sendMessage("That command doesn't exist, or the module is disabled.");
-            return false;
+            return true;
         }
 
         // We are likely trying to run a subcommand
@@ -67,12 +69,14 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             BaseCommand subCmd = cmd.getSubCommands().get(args[0]);
             if (subCmd == null) {
                 commandSender.sendMessage("That sub command doesn't exist for: " + cmd.getName().toLowerCase());
-                return false;
+                return true;
             }
+            if (!commandSender.hasPermission(subCmd.getPermission())) return this.noPermission(commandSender, cmd.getPermission());
             return cmd.getSubCommands().get(args[0]).execute(commandSender, Arrays.copyOfRange(args, 1, args.length));
         }
 
         // Base Commands
+        if (!commandSender.hasPermission(cmd.getPermission())) return this.noPermission(commandSender, cmd.getPermission());
         return cmd.execute(commandSender, args);
     }
 
@@ -86,11 +90,14 @@ public class CommandManager implements CommandExecutor, TabCompleter {
      */
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
-        this.main.LOGGER.log(Level.INFO, "Sender: " + commandSender.getName());
-        this.main.LOGGER.log(Level.INFO, "Command Label: " + command.getLabel().toLowerCase());
-        this.main.LOGGER.log(Level.INFO, "Command Name: " + command.getName().toLowerCase());
-        this.main.LOGGER.log(Level.INFO, "String: " + s);
-        this.main.LOGGER.log(Level.INFO, "Args[]: " + Arrays.toString(args) + " (" + args.length + ")");
+        boolean debug = false;
+        if (debug) {
+            this.main.LOGGER.log(Level.INFO, "Sender: " + commandSender.getName());
+            this.main.LOGGER.log(Level.INFO, "Command Label: " + command.getLabel().toLowerCase());
+            this.main.LOGGER.log(Level.INFO, "Command Name: " + command.getName().toLowerCase());
+            this.main.LOGGER.log(Level.INFO, "String: " + s);
+            this.main.LOGGER.log(Level.INFO, "Args[]: " + Arrays.toString(args) + " (" + args.length + ")");
+        }
 
         HashMap<String, BaseCommand> commands = this.main.MODULE_MANAGER.getAllCommands();
         BaseCommand cmd = commands.get(command.getLabel().toLowerCase());
@@ -111,5 +118,16 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
         // Base Commands
         return cmd.tabComplete(commandSender, args);
+    }
+
+    /**
+     * Generic message for informing a player they do not have permission to run that command
+     * @param sender to inform
+     * @param permission they are missing
+     * @return boolean
+     */
+    public boolean noPermission(CommandSender sender, String permission) {
+        sender.sendMessage(Component.text("You don't have permission for that. Requires: " + permission).color(NamedTextColor.RED));
+        return false;
     }
 }

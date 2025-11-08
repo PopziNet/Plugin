@@ -192,7 +192,7 @@ public class Mechanics extends BaseModule {
             int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 
             // Get world
-            World world = this.main.getServer().getWorld("world");
+            World world = this.main.getServer().getWorld("world"); // TODO: Hardcoded
             if (world == null) return;
 
             // Get config
@@ -200,7 +200,7 @@ public class Mechanics extends BaseModule {
             List<Integer> x = (List<Integer>) this.main.CFG.getData().getList("PHANTOMS_ENABLED_DAYS");
             if (x == null) return;
 
-            // Turn phantoms on for Fridays
+            // Turn Phantoms on for configured days
             if (x.contains(dayOfWeek)) {
                 world.setGameRule(GameRule.DO_INSOMNIA, true);
             } else {
