@@ -4,8 +4,8 @@ The PopziNet MC plugin, built for Paper with a blazing fast module and event han
 # Features
 - [ ] 🚧 Death logger
   - [ ] Able to log and restore the players position, inventory, armor, XP and reason or death.
-- [ ] 🚧 Tours System
-  - [ ] Players are able to `/tour` server builds
+- [X] Tours System
+  - [X] Players are able to `/tour` server builds
 - [x] Minor mechanic alterations
   - [X] Any cross/bow containing "torch" in the name will shoot inventory torches onto walls & set mobs on fire
   - [X] Killing other players with sweeping edge enchanted swords provides the chance to drop heads
