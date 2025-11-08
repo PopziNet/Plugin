@@ -9,6 +9,7 @@ import java.util.logging.Level;
 
 public class removePlayerState {
 
+    @SuppressWarnings("unused")
     public static boolean remove(Main main, Player player) {
         try (Connection c = main.DB.connect()) {
             PreparedStatement s = c.prepareStatement("DELETE FROM ToursPlayers WHERE UUID=?;");
