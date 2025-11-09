@@ -35,6 +35,12 @@ MODULE_TOURS: true
 # Determines if the tips module should be active.
 MODULE_TIPS: true
 
+# Determines if the tokens module should be active.
+MODULE_TOKENS: true # TODO
+
+# Determines if the quest module should be active.
+MODULE_QUESTS: true # TODO
+
 
 ############################################################
 # +------------------------------------------------------+ #
@@ -107,7 +113,6 @@ PHANTOMS_ENABLED_DAYS: [
 
 # Options for this module go here
 
-
 ############################################################
 # +------------------------------------------------------+ #
 # |                        Module                        | #
@@ -147,3 +152,21 @@ TIPS: [
   "We have an online map in /motd which you can view in 3D",
   "Jumping more than 100 blocks onto hard surfaces can have adverse health effects."
 ]
+
+############################################################
+# +------------------------------------------------------+ #
+# |                        Module                        | #
+# |                        Tokens                        | #
+# +------------------------------------------------------+ #
+############################################################
+
+# Options for this module go here
+
+############################################################
+# +------------------------------------------------------+ #
+# |                        Module                        | #
+# |                        Quests                        | #
+# +------------------------------------------------------+ #
+############################################################
+
+# Options for this module go here
