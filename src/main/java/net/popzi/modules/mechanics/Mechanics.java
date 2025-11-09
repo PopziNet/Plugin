@@ -53,14 +53,14 @@ public class Mechanics extends BaseModule {
             this.HandleZombieHorseEntities((ChunkLoadEvent) event);
         if (event instanceof EntityShootBowEvent)
             this.torchbow.HandleBowShoot((EntityShootBowEvent) event);
-        if (event instanceof ProjectileHitEvent) {
-            this.torchbow.HandleBowShootHit((ProjectileHitEvent) event);
-            this.HandleWindCharge((ProjectileHitEvent) event);
-        }
         if (event instanceof EntityPickupItemEvent)
             this.HandleEntityPickup((EntityPickupItemEvent) event);
         if (event instanceof PlayerArmSwingEvent)
             this.handleArmSwingEvent((PlayerArmSwingEvent) event);
+        if (event instanceof ProjectileHitEvent) {
+            this.torchbow.HandleBowShootHit((ProjectileHitEvent) event);
+            this.HandleWindCharge((ProjectileHitEvent) event);
+        }
     }
 
     /**
