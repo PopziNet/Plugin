@@ -54,9 +54,15 @@ public class Tour implements BaseCommand {
     @Override
     public boolean execute(CommandSender sender, String[] args) {
 
-        // Create inventory
-        Inventory navigationInventory = Bukkit.createInventory(null, 54, this.tours.GUI_TITLE);
+
+        // Check if already on a tour, and create inventory
         Player senderPlayer = (Player) sender;
+        if (this.tours.isOnTour(senderPlayer)) {
+            senderPlayer.sendMessage(Component.text("You're already on a tour. /tour exit"));
+            return true;
+        }
+        Inventory navigationInventory = Bukkit.createInventory(null, 54, this.tours.GUI_TITLE);
+
 
         // Setup menu icons
         int iPrev = 45; // Also acts as a limit for where data must end.

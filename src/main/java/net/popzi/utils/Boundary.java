@@ -66,6 +66,23 @@ public class Boundary {
                 && z >= min.getZ() && z <= max.getZ();
     }
 
+    /**
+     * Gets a random block inside the boundary
+     * @return Location of a random block in the boundary
+     */
+    public Location getRandomBlockInBoundary() {
+        if (this.location.getWorld() == null) return null;
+
+        Location min = getMin();
+        Location max = getMax();
+
+        double x = min.getX() + Math.random() * (max.getX() - min.getX());
+        double y = min.getY() + Math.random() * (max.getY() - min.getY());
+        double z = min.getZ() + Math.random() * (max.getZ() - min.getZ());
+
+        return new Location(this.location.getWorld(), x, y, z);
+    }
+
 }
 
 

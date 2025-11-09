@@ -80,8 +80,6 @@ public class Tours extends BaseModule {
     public void handlePlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        if (player.isOp()) return;
-
         // A player has logged in, they're not OP
         // Check if they have a playerState we need to adjust, and adjust it so.
         ToursPlayers playerState = getPlayerState.get(this.main, player);
@@ -94,7 +92,6 @@ public class Tours extends BaseModule {
 
         // Limit our event to only spectators who aren't OP.
         if (player.getGameMode() != GameMode.SPECTATOR) return;
-        if (player.isOp()) return;
 
         // Only limited to people in spectator mode and who are actively on a tour
         ToursPlayers playerState = getPlayerState.get(this.main, player);
@@ -118,7 +115,7 @@ public class Tours extends BaseModule {
             // quite a lot of database calls and happening which we ideally don't want on main.
             this.main.getServer().getScheduler().runTask(this.main, () -> {
                 player.teleport(tLocation);
-                player.sendMessage("You went too far from the tour area. You exit with /tour exit");
+                player.sendMessage("You went too far from the tour area. You can exit with /tour exit");
             });
         }
     }
@@ -137,7 +134,8 @@ public class Tours extends BaseModule {
                 playerState.z()
         );
         player.teleport(newLoc);
-        player.setGameMode(GameMode.SURVIVAL);
+        if (!player.isOp())
+            player.setGameMode(GameMode.SURVIVAL);
         removePlayerState.remove(this.main, player);
     }
 
@@ -163,5 +161,12 @@ public class Tours extends BaseModule {
         player.setGameMode(GameMode.SPECTATOR);
     }
 
-
+    /**
+     * Returns true or false if a player is currently on a tour
+     * @param player to check
+     * @return boolean if on tour
+     */
+    public boolean isOnTour(Player player) {
+        return getPlayerState.get(this.main, player) != null;
+    }
 }

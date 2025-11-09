@@ -66,13 +66,14 @@ public class Torchbow {
             ItemStack torch = inventory.getItem(torch_index);
             if (torch == null)
                 return;
+            String torchTypeBeforeRemove = torch.getType().toString();
             torch.setAmount(torch.getAmount() - 1);
             inventory.setItem(torch_index, torch);
 
             // Begin the event. Set the projectile on fire and tag is, so we know how to process it when
             // It hits a block on the block hitting event
             event.getProjectile().setVisualFire(TriState.TRUE);
-            event.getProjectile().addScoreboardTag(torch.getType().toString());
+            event.getProjectile().addScoreboardTag(torchTypeBeforeRemove);
         }
     }
 

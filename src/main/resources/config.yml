@@ -84,7 +84,7 @@ PLAYER_HEADS_SWEEP_DROP_CHANCE: 0.07
 # Determines if torch bows should be enabled, allowing players to shoot torches onto walls
 # if their cross/bow contains "Torch" in the name
 TORCH_BOW_ENABLE: true
-TORCH_BOW_ENABLED_FIRE_CHANCE: 0.05
+TORCH_BOW_ENABLED_FIRE_CHANCE: 0.08
 
 # Enables Phantoms on a given day(s)
 # Otherwise, Phantoms will be disabled

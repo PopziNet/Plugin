@@ -1,7 +1,10 @@
 package net.popzi.modules.mechanics;
 
+import io.papermc.paper.event.player.PlayerArmSwingEvent;
 import net.popzi.Main;
 import net.popzi.modules.BaseModule;
+import net.popzi.utils.Boundary;
+import net.popzi.utils.Random;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
@@ -42,24 +45,19 @@ public class Mechanics extends BaseModule {
 
     @Override
     public void handleEvent(Event event) {
-        // TODO: Switch may be better here
-        if (event instanceof PlayerDeathEvent) {
+        if (event instanceof PlayerDeathEvent)
             this.HandleSwordDeath((PlayerDeathEvent) event);
-        }
-        if (event instanceof EntityDeathEvent) {
+        if (event instanceof EntityDeathEvent)
             this.HandleZombieDeath((EntityDeathEvent) event);
-        }
-        if (event instanceof ChunkLoadEvent) {
+        if (event instanceof ChunkLoadEvent)
             this.HandleZombieHorseEntities((ChunkLoadEvent) event);
-        }
-        if (event instanceof EntityShootBowEvent) {
+        if (event instanceof EntityShootBowEvent)
             this.torchbow.HandleBowShoot((EntityShootBowEvent) event);
-        }
         if (event instanceof ProjectileHitEvent) {
             this.torchbow.HandleBowShootHit((ProjectileHitEvent) event);
             this.HandleWindCharge((ProjectileHitEvent) event);
         }
-        if (event instanceof EntityPickupItemEvent) {
+        if (event instanceof EntityPickupItemEvent)
             this.HandleEntityPickup((EntityPickupItemEvent) event);
         if (event instanceof PlayerArmSwingEvent)
             this.handleArmSwingEvent((PlayerArmSwingEvent) event);
@@ -127,7 +125,6 @@ public class Mechanics extends BaseModule {
         }
     }
 
-
     /**
      * Handles Zombie Horses. An event caused these to spawn everywhere.
      * So, delete them unless they're named.
@@ -144,16 +141,15 @@ public class Mechanics extends BaseModule {
     }
 
     /**
-     * Hey look at you, you found your first secret :-)
+     * Hey look at you, you found a secret :-)
      * @param event The wind charge event
      */
     public void HandleWindCharge(ProjectileHitEvent event) {
+        if (event.getEntity().isEmpty()) return;
+        if (event.getEntity().getShooter() == null) return;
         if (event.getEntity().getShooter() instanceof Player p) {
-
             Entity e = event.getHitEntity();
-            if (e == null)
-                return;
-
+            if (e == null) return;
             if (p.getInventory().getItemInMainHand().displayName().toString().toLowerCase().contains("super"))
                 e.setVelocity(e.getVelocity().multiply(10));
         }
