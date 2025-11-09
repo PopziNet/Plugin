@@ -1,5 +1,6 @@
 package net.popzi.core;
 
+import io.papermc.paper.event.player.PlayerArmSwingEvent;
 import net.popzi.Main;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -124,6 +125,11 @@ public class EventDispatcher implements Listener {
     @EventHandler
     @SuppressWarnings("unused")
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
+        this.main.MODULE_MANAGER.pushEvent(event);
+    }
+
+    @EventHandler
+    public void onPlayerArmSwingEvent(PlayerArmSwingEvent event) {
         this.main.MODULE_MANAGER.pushEvent(event);
     }
 }

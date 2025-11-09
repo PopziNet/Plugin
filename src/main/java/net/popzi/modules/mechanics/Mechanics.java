@@ -61,7 +61,8 @@ public class Mechanics extends BaseModule {
         }
         if (event instanceof EntityPickupItemEvent) {
             this.HandleEntityPickup((EntityPickupItemEvent) event);
-        }
+        if (event instanceof PlayerArmSwingEvent)
+            this.handleArmSwingEvent((PlayerArmSwingEvent) event);
     }
 
     /**
@@ -177,6 +178,41 @@ public class Mechanics extends BaseModule {
             event.getItem().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.GIANT);
             event.getEntity().remove();
         }, 1L);
+    }
+
+    /**
+     * Possibly another s3cr3t?
+     * @param event of the arm swing event
+     */
+    public void handleArmSwingEvent(PlayerArmSwingEvent event) {
+        ItemStack itmHand = event.getPlayer().getInventory().getItemInMainHand();
+
+        if (itmHand.getType() != Material.LIGHTNING_ROD) return;
+
+        if (itmHand.displayName().toString().toLowerCase().contains("zeus")) {
+            Player player = event.getPlayer();
+            Boundary box = new Boundary(player.getLocation(), 50);
+
+            for (int i = 0; i < 6; i++) {
+
+                int delay = Random.number(0, 20);
+
+                // Todo: If the name also contains an online players name....?
+                Location strikeLocation = box.getRandomBlockInBoundary();
+
+                // Correct the highest possible block
+                strikeLocation.setY(
+                        strikeLocation.getWorld().getHighestBlockYAt(
+                                strikeLocation.getBlockX(),
+                                strikeLocation.getBlockZ()
+                        )
+                );
+
+                this.main.getServer().getScheduler().runTaskLater(this.main, () -> {
+                    strikeLocation.getWorld().strikeLightningEffect(strikeLocation);
+                }, delay);
+            }
+        }
     }
 
     /**
