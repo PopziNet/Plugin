@@ -22,7 +22,7 @@ The PopziNet MC plugin, built for Paper with a blazing fast module and event han
   - [ ] Staff are able to create quests, with a set reward
   - [ ] The reward can either be in-game items, or in tokens
   - [ ] Quests can either be completed as
-    - [ ] `Solo`: in which case rewards are handed out logarithmically across all participants
+    - [ ] `Solo`: in which case rewards are handed out exponentially across all participants
     - [ ] `Shared`: in which case rewards are handed out equally across all participants
 - [ ] 🚧 Trolling / Staff System
   - [ ] Staff are able to abuse playe-*COUGH* griefers
