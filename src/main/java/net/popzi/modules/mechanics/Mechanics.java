@@ -9,6 +9,7 @@ import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
@@ -25,6 +26,7 @@ import static org.bukkit.Tag.ITEMS_SWORDS;
 public class Mechanics extends BaseModule {
 
     private final Torchbow torchbow;
+    private final Holy holy;
     public boolean insomniaActive;
 
     /**
@@ -34,6 +36,7 @@ public class Mechanics extends BaseModule {
     public Mechanics(Main main) {
         super(main);
         this.torchbow = new Torchbow(main);
+        this.holy = new Holy(main);
         this.insomniaActive = false;
         this.startCronTimer();
     }
@@ -57,6 +60,8 @@ public class Mechanics extends BaseModule {
             this.HandleEntityPickup((EntityPickupItemEvent) event);
         if (event instanceof PlayerArmSwingEvent)
             this.handleArmSwingEvent((PlayerArmSwingEvent) event);
+        if (event instanceof BlockPlaceEvent)
+            this.holy.handleBlockPlace((BlockPlaceEvent) event);
         if (event instanceof ProjectileHitEvent) {
             this.torchbow.HandleBowShootHit((ProjectileHitEvent) event);
             this.HandleWindCharge((ProjectileHitEvent) event);

@@ -5,6 +5,7 @@ import net.popzi.Main;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -131,5 +132,14 @@ public class EventDispatcher implements Listener {
     @EventHandler
     public void onPlayerArmSwingEvent(PlayerArmSwingEvent event) {
         this.main.MODULE_MANAGER.pushEvent(event);
+    }
+
+    /**
+     * Listens for block placements
+     * @param event of the player placing a block
+     */
+    @EventHandler
+    public void onBlockPlaceEvent(BlockPlaceEvent event) {
+        this.main.MODULE_MANAGER.pushEventSingleThreaded(event);
     }
 }
